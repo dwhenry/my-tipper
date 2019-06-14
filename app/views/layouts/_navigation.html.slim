@@ -31,7 +31,7 @@
           ul
             li= link_to 'Leader board', leaderboard_results_path(paramify)
             li= link_to 'Points breakdown', results_path(paramify)
-            li= link_to 'Match breakdown', fixture_path(Fixture.last_fixture(event), paramify)
+            li= link_to 'Match breakdown', fixture_path(Fixture.last_fixture(event), paramify) if Fixture.last_fixture(event)
       li
         span.drop-down Leagues
         .second-level-menu

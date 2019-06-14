@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
 
   def event
     # this should not really be hard coded.. but makes it a little easier during the initial implementation
-    params[:event].presence || '2015'
+    params[:event].presence || '2019'
   end
 
   def league
@@ -50,6 +50,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :name
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    # devise_parameter_sanitizer.for(:sign_up) << :name
   end
 end
