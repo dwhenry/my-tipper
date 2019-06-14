@@ -49,3 +49,4 @@ gem 'browser-timezone-rails'
 gem "airbrake"
 gem 'sendgrid-ruby'
 gem 'newrelic_rpm'
+gem 'uglifier'
