@@ -23,7 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: my-tipper_development
+  database: <%= ENV['DATABASE_NAME'] || 'my-tipper_development' %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
