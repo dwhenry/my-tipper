@@ -1,37 +1,78 @@
 - content_for :header do
   | Picks
 
-.btn-group
-  = link_to 'Future games', picks_path(paramify(display: nil)), class: "btn #{'selected' unless params[:display] == 'all'}", method: 'get'
-  = link_to 'All games', picks_path(paramify(display: 'all')), class: "btn #{'selected' if params[:display] == 'all'}", method: 'get'
-br
-br
-= form_tag picks_path(paramify) do
-  table.table#picks
-    - if @fixtures_by_round.empty?
-      h3 No upcoming games to select picks for..
-    - @fixtures_by_round.each do |round, fixtures|
-      tr
-        th style="width: 20%"
-          - if round =~ /^\d+$/
-            ' Round
-          = round
-        th
-        th style="width: 20%"
-          = submit_tag 'Save', class: 'btn'
-      - fixtures.each do |fixture|
-        tr
-          td.text-right
-            = fixture.home.name
-          td.text-center
-            .slider
-            br
-            .pick class=("next-game-in" if [nil, 0].include?(@pick[fixture.id])) data={at: fixture.at.to_i}
-            = hidden_field_tag "home_#{fixture.id}", fixture.home.name, class: 'home'
-            = hidden_field_tag "away_#{fixture.id}", fixture.away.name, class: 'away'
-            = hidden_field_tag "picks[fix_#{fixture.id}]", @pick[fixture.id], class: 'amount'
-          td
-            = fixture.away.name
+- if @upcoming_fixtures.any?
+  .row
+    .col-md-12#picks
 
+      h2 class="h6 text-uppercase text-black font-weight-bold mb-3"= "Upcoming RWC #{event} picks"
 
+      - @upcoming_fixtures.each do |fixture|
+        .row.align-items-center
+          .col-md-12
+            .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+              .col-md-4.col-lg-4.mb-4.mb-lg-0
+                .text-center.text-lg-left
+                  .d-block.d-lg-flex.align-items-center
+                    .image.image-small.text-center.mb-3.mb-lg-0.mr-lg-3
+                      div class="img-fluid flag-sprite #{fixture.home.short_name}"
+                    .text
+                      h3 class="h5 mb-0 text-black"= fixture.home.real_name
+                      span class="text-uppercase small country"= fixture.home.wrapper_name
 
+              .col-md-4.col-lg-4.text-center.mb-4.mb-lg-0
+                .pick data={fixture_id: fixture.id}
+                  .slider
+                  br
+                  .pick class=("next-game-in" if [nil, 0].include?(@pick[fixture.id])) data={ at: fixture.at.to_i }
+
+                  = hidden_field_tag "home_#{fixture.id}", fixture.home.name, class: 'home'
+                  = hidden_field_tag "away_#{fixture.id}", fixture.away.name, class: 'away'
+                  = hidden_field_tag "picks[fix_#{fixture.id}]", @pick[fixture.id], class: 'amount'
+
+              .col-md-4.col-lg-4.text-center.text-lg-right
+                div
+                  .d-block.d-lg-flex.align-items-center
+                    .image.image-small.ml-lg-3.mb-3.mb-lg-0.order-2
+                      div class="img-fluid flag-sprite #{fixture.away.short_name}"
+                    .text.order-1.w-100
+                      h3 class="h5 mb-0 text-black"= fixture.away.real_name
+                      span class="text-uppercase small country"= fixture.home.wrapper_name
+
+- if @past_fixtures.any?
+  .row
+    .col-md-12
+
+      h2 class="h6 text-uppercase text-black font-weight-bold mb-3"= "Past RWC #{event} picks"
+
+      - @past_fixtures.each do |fixture|
+        .row.align-items-center
+          .col-md-12
+            .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+              .col-md-4.col-lg-4.mb-4.mb-lg-0
+                .text-center.text-lg-left
+                  .d-block.d-lg-flex.align-items-center
+                    .image.image-small.text-center.mb-3.mb-lg-0.mr-lg-3
+                      div class="img-fluid flag-sprite #{fixture.home.short_name}"
+                    .text
+                      h3 class="h5 mb-0 text-black"= fixture.home.real_name
+                      span class="text-uppercase small country"= fixture.home.wrapper_name
+
+              .col-md-4.col-lg-4.text-center.mb-4.mb-lg-0
+                .pick data={ fixture_id: fixture.id }
+                  .pick
+                    - if @pick[fixture.id].positive?
+                      = "#{fixture.away.real_name} by #{@pick[fixture.id]}"
+                    - elsif @pick[fixture.id].negative?
+                      = "#{fixture.home.real_name} by #{@pick[fixture.id].abs}"
+                    - else
+                      | You failed to pick and winner
+
+              .col-md-4.col-lg-4.text-center.text-lg-right
+                div
+                  .d-block.d-lg-flex.align-items-center
+                    .image.image-small.ml-lg-3.mb-3.mb-lg-0.order-2
+                      div class="img-fluid flag-sprite #{fixture.away.short_name}"
+                    .text.order-1.w-100
+                      h3 class="h5 mb-0 text-black"= fixture.away.real_name
+                      span class="text-uppercase small country"= fixture.home.wrapper_name
