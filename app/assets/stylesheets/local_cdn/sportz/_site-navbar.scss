@@ -12,13 +12,18 @@
 		top: 0;
 		left: 0;
 		width: 100%;
+      margin-bottom: 20px;
 	}
 
 	.site-logo {
 		position: absolute;
-		left: 0;
+		left: 100px;
 		top: 0;
-		margin-top: -20px;
+		margin-top: -5px;
+
+      img {
+        width: 160px
+      }
 	}
 	
 	.site-navigation {

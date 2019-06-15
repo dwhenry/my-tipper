@@ -1,54 +1,101 @@
-#navigation
+header class="site-navbar absolute transparent" role="banner"
+  .py-3
+    .container
+      .row.align-items-center
+        .col-6.col-md-3
+          a href="#" class="text-secondary px-2 pl-0"
+            span class="icon-facebook"
+          a href="#" class="text-secondary px-2"
+            span class="icon-instagram"
+          a href="#" class="text-secondary px-2"
+            span class="icon-twitter"
+          a href="#" class="text-secondary px-2"
+            span class="icon-linkedin"
 
-  ul.align-right
-    - if current_admin
-      - if current_user
-        li= current_user.email
-        li= link_to 'Clear user', root_path(paramify(clear_e: true))
-      - else
-        li= "ADMIN"
-      li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
-    - elsif current_user
-      li= "Hi #{current_user.name}"
-      li= link_to 'Logout', destroy_user_session_path(paramify), method: 'delete'
-      li
-        = link_to edit_user_registration_path(paramify) do
-          .settings
-    - else
-      li= link_to 'Admin', new_admin_session_path(paramify)
-      li= link_to 'Sign in', new_user_session_path(paramify)
-      li= link_to 'Sign up', new_user_registration_path(paramify)
+        .col-6.col-md-9.text-right
+          .d-inline-block
+            a href="#" class="text-secondary p-2 d-flex align-items-center"
+              span class="icon-envelope mr-3"
+              span class="d-none d-md-block" david@decoybecoy.com
+          / .d-inline-block
+          /   a href="#" class="text-secondary p-2 d-flex align-items-center"
+          /     span class="icon-phone mr-0 mr-md-3"
+          /     span class="d-none d-md-block" +1 232 3532 321
 
-  ul.top-level-menu
-    li= link_to 'How to play', root_path(paramify)
-    li= link_to 'Fixtures', fixtures_path(paramify)
+  nav class="site-navigation position-relative text-right bg-black text-md-right" role="navigation"
+    .container.position-relative
+      .site-logo
+        a href="/"
+          = image_tag "logo2.png", alt: ""
 
-    - if current_user
-      li= link_to 'Picks', picks_path(paramify)
-      li
-        span.drop-down Results
-        .second-level-menu
-          ul
-            li= link_to 'Leader board', leaderboard_results_path(paramify)
-            li= link_to 'Points breakdown', results_path(paramify)
-            li= link_to 'Match breakdown', fixture_path(Fixture.last_fixture(event), paramify) if Fixture.last_fixture(event)
-      li
-        span.drop-down Leagues
-        .second-level-menu
-          ul
-            li= link_to 'Create a league', new_league_path(paramify)
-            li= link_to 'All Leagues', leagues_path(paramify)
-            - if current_user.non_event_leagues.any?
-              li.filters Filters
-              li.filter= link_to 'All players', current_path(league: nil)
-            - current_user.non_event_leagues.each do |league|
-              li.filter= link_to "#{league.name} players", current_path(league: league.name)
-    - if current_admin
-      li= link_to 'Team wrappers', team_wrappers_path(paramify)
-    li
-      span.drop-down = "RWC #{event}"
-      .second-level-menu
-        ul
-          li= link_to "RWC 2019", current_path(event: nil)
-          li= link_to "RWC 2015", current_path(event: '2015')
-          li= link_to "RWC 2011", current_path(event: '2011')
+      .d-inline-block.d-md-none.ml-md-0.mr-auto.py-3
+        a href="#" class="site-menu-toggle js-menu-toggle text-white"
+          span class="icon-menu h3"
+
+      ul class="site-menu js-clone-nav d-none d-md-block"
+        li class="has-children active"
+          a href="#" Home
+          ul class="dropdown arrow-top"
+            li= link_to 'How to play', root_path(paramify)
+
+        li= link_to 'Matches', fixtures_path(paramify)
+
+        - if current_user
+          li= link_to 'Picks', picks_path(paramify)
+          li class="has-children"
+            a href="#" Results
+            ul class="dropdown arrow-top"
+              li= link_to 'Leader board', leaderboard_results_path(paramify)
+              li= link_to 'Points breakdown', results_path(paramify)
+              li= link_to 'Match breakdown', fixture_path(Fixture.last_fixture(event), paramify) if Fixture.last_fixture(event)
+          li class="has-children"
+            a href="#" Leagues
+            ul class="dropdown arrow-top"
+              li= link_to 'Create a league', new_league_path(paramify)
+              li= link_to 'All Leagues', leagues_path(paramify)
+              - if current_user.non_event_leagues.any?
+                li class="has-children"
+                  a href="#" Current leagues
+                  ul class="dropdown"
+                    li= link_to 'All players', current_path(league: nil)
+                    - current_user.non_event_leagues.each do |league|
+                      li= link_to "#{league.name} players", current_path(league: league.name)
+
+
+        - if current_admin
+          li= link_to 'Team wrappers', team_wrappers_path(paramify)
+        li class="has-children"
+          a href="#"= "RWC #{event}"
+          ul class="dropdown arrow-top"
+            li= link_to "RWC 2019", current_path(event: nil)
+            li= link_to "RWC 2015", current_path(event: '2015')
+            li= link_to "RWC 2011", current_path(event: '2011')
+
+        - if current_admin
+          - if current_user
+            li class="has-children"
+              a href="#"= current_user.email
+              ul class="dropdown arrow-top"
+                li= link_to 'Clear user', root_path(paramify(clear_e: true))
+                li
+                  a href="#" Menu Two
+                li
+                  a href="#" Menu Three
+                li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
+          - else
+            li class="has-children"
+              = link_to 'Admin'
+              ul class="dropdown arrow-top"
+                li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
+        - elsif current_user
+          li class="has-children"
+            a href="#"= current_user.name
+            ul class="dropdown arrow-top"
+              li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
+              li= link_to 'Config', edit_user_registration_path(paramify)
+        - else
+          li class="has-children"
+            li= link_to 'Sign up', new_user_registration_path(paramify)
+            ul class="dropdown arrow-top"
+              li= link_to 'Sign in', new_user_session_path(paramify)
+              li= link_to 'Admin', new_admin_session_path(paramify)
