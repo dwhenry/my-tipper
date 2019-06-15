@@ -1,11 +1,11 @@
 $(function () {
   $.each($('#picks .pick'), function() {
-    let _this = $(this);
-    let callback;
+    var _this = $(this);
+    var callback;
 
     function setPick() {
-      let amount = _this.find('.amount').val();
-      let message;
+      var amount = _this.find('.amount').val();
+      var message;
       if (amount === 0) {
         message = 'Please select a winning margin';
       } else if(amount < 0) {
@@ -21,8 +21,8 @@ $(function () {
     setPick();
 
     function save() {
-      let fixture_id = _this.data('fixture_id');
-      let picks = {}
+      var fixture_id = _this.data('fixture_id');
+      var picks = {}
       picks["fix_" + fixture_id] = _this.find(".amount").val()
       $.ajax({
         url: "/picks",
