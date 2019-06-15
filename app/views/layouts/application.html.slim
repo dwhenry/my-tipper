@@ -28,7 +28,8 @@ html lang="en"
             .row.align-items-center.justify-content-start
               .col-md-6.text-center.text-md-left data-aos="fade-up" data-aos-delay="400"
                 h1 class="bg-text-line"= "Rugby World Cup 2019 Score Tipper" + (content_for(:header) ? " - #{yield(:header)}" : '')
-                p= link_to 'Join here', new_user_registration_path(paramify), class: "btn btn-primary btn-sm rounded-0 py-3 px-5"
+                - if current_admin.nil? && current_user.nil?
+                  p= link_to 'Join here', new_user_registration_path(paramify), class: "btn btn-primary btn-sm rounded-0 py-3 px-5"
 
       .site-blocks-vs.site-section.bg-light
         .container

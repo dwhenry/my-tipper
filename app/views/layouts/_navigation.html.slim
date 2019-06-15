@@ -12,14 +12,14 @@ header class="site-navbar absolute transparent" role="banner"
     .container
       .row.align-items-center
         .col-6.col-md-3
-          a href="#" class="text-secondary px-2 pl-0"
-            span class="icon-facebook"
-          a href="#" class="text-secondary px-2"
-            span class="icon-instagram"
-          a href="#" class="text-secondary px-2"
-            span class="icon-twitter"
-          a href="#" class="text-secondary px-2"
-            span class="icon-linkedin"
+          / a href="#" class="text-secondary px-2 pl-0"
+          /   span class="icon-facebook"
+          / a href="#" class="text-secondary px-2"
+          /   span class="icon-instagram"
+          / a href="#" class="text-secondary px-2"
+          /   span class="icon-twitter"
+          / a href="#" class="text-secondary px-2"
+          /   span class="icon-linkedin"
 
         .col-6.col-md-9.text-right
           .d-inline-block
@@ -60,7 +60,7 @@ header class="site-navbar absolute transparent" role="banner"
             a href="#" Leagues
             ul class="dropdown arrow-top"
               li= link_to 'Create a league', new_league_path(paramify)
-              li= link_to 'All Leagues', leagues_path(paramify)
+              li= link_to 'Leagues', leagues_path(paramify)
               - if current_user.non_event_leagues.any?
                 li class="has-children"
                   a href="#" Current leagues
