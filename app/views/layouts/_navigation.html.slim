@@ -103,7 +103,7 @@ header class="site-navbar absolute transparent" role="banner"
               li= link_to 'Config', edit_user_registration_path(paramify)
         - else
           li class="has-children"
-            li= link_to 'Sign in', new_user_session_path(paramify)
+            = link_to 'Sign in', new_user_session_path(paramify)
             ul class="dropdown arrow-top"
               li= link_to 'Sign up', new_user_registration_path(paramify)
               li= link_to 'Admin', new_admin_session_path(paramify)
