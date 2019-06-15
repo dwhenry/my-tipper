@@ -2,11 +2,7 @@ class FixturesController < ApplicationController
   before_action :authenticate_admin!, except: [:index, :show]
 
   def index
-    fixtures = Fixture.includes({home: :team}, {away: :team}).order(:at)
-    fixtures = fixtures.where(event: event)
-    fixtures = fixtures.where(['at > ?', Time.now.utc]) unless params[:display] == 'all'
-
-    @fixtures_by_round = fixtures.all.group_by(&:round)
+    @fixtures = Fixture.where(event: event).includes({home: :team}, {away: :team}).order(:at)
   end
 
   def create

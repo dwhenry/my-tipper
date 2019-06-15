@@ -29,6 +29,10 @@ class TeamWrapper < ActiveRecord::Base
     team.try(:name) || attributes["name"]
   end
 
+  def wrapper_name
+    attributes["name"]
+  end
+
   def fixture
     Fixture.where(['home_id = ? or away_id = ?', id, id]).first
   end

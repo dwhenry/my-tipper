@@ -1,8 +1,23 @@
-- if (fixture = Fixture.where(event: event).order(:at).where(['at > ?', Time.now]).first)
-  #next-game
-    ' Next Game:
-    = fixture.home.name
-    '  v
-    = fixture.away.name
-    '  -
-    .next-game-in style='display: inline-block' data={at: fixture.at.to_i}
+- if (fixture = Fixture.order(:at).where(['at > ?', Time.now]).first)
+  .border.mb-3.rounded.d-block.d-lg-flex.align-items-center.p-3.next-match
+
+    .mr-auto.order-md-1.w-60.text-center.text-lg-left.mb-3.mb-lg-0
+      | Next match
+      #date-countdown data={at: fixture.at}
+
+    .ml-auto.pr-4.order-md-2
+      .h5.text-black.text-uppercase.text-center.text-lg-left
+        .d-block.d-md-inline-block.mb-3.mb-lg-0
+          div class="flag-sprite #{fixture.home.short_name}"
+          span class="d-block d-md-inline-block ml-0 ml-md-3 ml-lg-0"= fixture.home.name
+
+        span class="text-muted mx-3 text-normal mb-3 mb-lg-0 d-block d-md-inline " vs
+        .d-block.d-md-inline-block
+          div class="flag-sprite #{fixture.away.short_name}"
+          span class="d-block d-md-inline-block ml-0 ml-md-3 ml-lg-0"= fixture.away.name
+
+- else
+  .border.mb-3.rounded.d-block.d-lg-flex.align-items-center.p-3.next-match
+
+    .mr-auto.order-md-1.w-60.text-center.text-lg-left.mb-3.mb-lg-0
+      | No Scheduled matches

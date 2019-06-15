@@ -20,3 +20,12 @@
 //= require js.cookie
 //= require jstz
 //= require browser_timezone_rails/set_time_zone
+
+//= require sportz/popper.min
+//= require sportz/bootstrap.min
+// require sportz/owl.carousel.min
+//= require sportz/jquery.stellar.min
+//= require sportz/jquery.countdown.min
+// require sportz/jquery.magnific-popup.min
+//= require sportz/aos
+//= require sportz/main

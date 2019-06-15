@@ -1,34 +1,41 @@
 doctype html
 html lang="en"
-head
+  head
+    = stylesheet_link_tag "application", media: "all"
+    = csrf_meta_tags
+    meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"
+
+    = stylesheet_link_tag "https://fonts.googleapis.com/css?family=Mukta:300,400,700"
+    = stylesheet_link_tag "icomoon/style.css"
+
+    meta charset="utf-8"
+    meta property="og:type"   content="article"
+    meta property="og:url" content=root_url
+    meta property="og:image" content=asset_url('mde')
+    meta property="og:title"  content="My Tipper - World Cup Rugby"
+
+  body class="#{"admin" if current_admin} #{"user" if current_user}"
+    .site-wrap
+      = render 'layouts/navigation'
+
+      .site-blocks-vs.site-section.bg-light
+        .container
+          = render 'layouts/next_game'
+
+      .slide-one-item.home-slider.owl-carousel
+        .site-blocks-cover.overlay style="background-image: url(#{image_url('scrum.jpg')});" data-aos="fade" data-stellar-background-ratio="0.5"
+          .container
+            .row.align-items-center.justify-content-start
+              .col-md-6.text-center.text-md-left data-aos="fade-up" data-aos-delay="400"
+                h1 class="bg-text-line"= "Rugby World Cup 2019 Score Tipper" + (content_for(:header) ? " - #{yield(:header)}" : '')
+                p= link_to 'Join here', new_user_registration_path(paramify), class: "btn btn-primary btn-sm rounded-0 py-3 px-5"
+
+      .site-blocks-vs.site-section.bg-light
+        .container
+
+          p.alert= alert
+
+          = yield
+
+
   = javascript_include_tag "application"
-  = stylesheet_link_tag "application", media: "all"
-  = csrf_meta_tags
-  / meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"
-
-  = stylesheet_link_tag "https://fonts.googleapis.com/css?family=Mukta:300,400,700"
-  = stylesheet_link_tag "fonts/icomoon/style.css"
-
-  meta charset="utf-8"
-  meta property="og:type"   content="article"
-  meta property="og:url" content=root_url
-  meta property="og:image" content=asset_url('mde')
-  meta property="og:title"  content="My Tipper - World Cup Rugby"
-body.container class="#{"admin" if current_admin} #{"user" if current_user}"
-  header
-    .mde-image
-    h1
-      | World Cup Tipper
-      - if content_for :header
-        '  -
-        = yield :header
-  = render 'layouts/navigation'
-  /p.notice= notice
-  p.alert= alert
-
-  section.columns
-    .four-fifths.column
-      = yield
-    .one-fifth.column
-      = render 'layouts/side_nav'
-  = render 'layouts/next_game'
