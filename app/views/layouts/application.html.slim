@@ -1,7 +1,6 @@
 doctype html
 html lang="en"
   head
-    = javascript_include_tag "application"
     = stylesheet_link_tag "application", media: "all"
     = csrf_meta_tags
     meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -15,22 +14,28 @@ html lang="en"
     meta property="og:image" content=asset_url('mde')
     meta property="og:title"  content="My Tipper - World Cup Rugby"
 
-  body.container class="#{"admin" if current_admin} #{"user" if current_user}"
-    = render 'layouts/navigation'
+  body class="#{"admin" if current_admin} #{"user" if current_user}"
     .site-wrap
-      header
-        .mde-image
-        h1
-          | World Cup Tipper
-          - if content_for :header
-            '  -
-            = yield :header
-      /p.notice= notice
-      p.alert= alert
+      = render 'layouts/navigation'
 
-      section.columns
-        .four-fifths.column
+      .site-blocks-vs.site-section.bg-light
+        .container
+          = render 'layouts/next_game'
+
+      .slide-one-item.home-slider.owl-carousel
+        .site-blocks-cover.overlay style="background-image: url(#{image_url('scrum.jpg')});" data-aos="fade" data-stellar-background-ratio="0.5"
+          .container
+            .row.align-items-center.justify-content-start
+              .col-md-6.text-center.text-md-left data-aos="fade-up" data-aos-delay="400"
+                h1 class="bg-text-line"= "Rugby World Cup 2019 Score Tipper" + (content_for(:header) ? " - #{yield(:header)}" : '')
+                p= link_to 'Join here', new_user_registration_path(paramify), class: "btn btn-primary btn-sm rounded-0 py-3 px-5"
+
+      .site-blocks-vs.site-section.bg-light
+        .container
+
+          p.alert= alert
+
           = yield
-        .one-fifth.column
-          = render 'layouts/side_nav'
-      = render 'layouts/next_game'
+
+
+  = javascript_include_tag "application"

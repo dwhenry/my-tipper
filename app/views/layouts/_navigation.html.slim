@@ -1,3 +1,12 @@
+.site-mobile-menu
+  .site-mobile-menu-header
+    .site-mobile-menu-logo
+      a href="#"
+        = image_tag "logo2.png", alt: ""
+    .site-mobile-menu-close.mt-3
+      span class="icon-close2 js-menu-toggle"
+  .site-mobile-menu-body
+
 header class="site-navbar absolute transparent" role="banner"
   .py-3
     .container
@@ -34,11 +43,10 @@ header class="site-navbar absolute transparent" role="banner"
 
       ul class="site-menu js-clone-nav d-none d-md-block"
         li class="has-children active"
-          a href="#" Home
+          a href="/" Home
           ul class="dropdown arrow-top"
             li= link_to 'How to play', root_path(paramify)
-
-        li= link_to 'Matches', fixtures_path(paramify)
+            li= link_to 'Matches', fixtures_path(paramify)
 
         - if current_user
           li= link_to 'Picks', picks_path(paramify)
@@ -95,7 +103,7 @@ header class="site-navbar absolute transparent" role="banner"
               li= link_to 'Config', edit_user_registration_path(paramify)
         - else
           li class="has-children"
-            li= link_to 'Sign up', new_user_registration_path(paramify)
+            li= link_to 'Sign in', new_user_session_path(paramify)
             ul class="dropdown arrow-top"
-              li= link_to 'Sign in', new_user_session_path(paramify)
+              li= link_to 'Sign up', new_user_registration_path(paramify)
               li= link_to 'Admin', new_admin_session_path(paramify)

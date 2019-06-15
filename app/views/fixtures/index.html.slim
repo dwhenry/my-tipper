@@ -1,34 +1,57 @@
 - content_for :header do
-  | Fixtures
+  | Matches
 
-.btn-group
-  = link_to 'Future games', fixtures_path(paramify(display: nil)), class: "btn #{'selected' unless params[:display] == 'all'}"
-  = link_to 'All games', fixtures_path(paramify(display: 'all')), class: "btn #{'selected' if params[:display] == 'all'}"
-br
-br
-= form_tag fixtures_path(paramify) do
-  table.table
-    - @fixtures_by_round.each do |round, fixtures|
-      tr
-        th style="width: 240px"
-          - if round =~ /^\d+$/
-            ' Round
-          = round
-        th
-        th
-        - if current_admin
-          th= submit_tag "Save", class: 'btn'
-      - fixtures.each do |fixture|
-        tr
-          td
-            = fixture.home.name
-            '  v
-            = fixture.away.name
-          td= fixture.at.strftime('%d %b %y, %l:%M%P')
-          td= fixture.venue
-          - if current_admin
-            td
-              - if fixture.at < Time.now.utc
-                = text_field_tag "fixtures[fix_#{fixture.id}]", fixture.result
-              - else
-                ' Pending
+
+.row
+  .col-md-12
+
+    h2 class="h6 text-uppercase text-black font-weight-bold mb-3"= "RWC #{event} Matches"
+
+    - @fixtures.each do |fixture|
+      .row.align-items-center
+        .col-md-12
+          .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+            .col-md-4.col-lg-4.mb-4.mb-lg-0
+              .text-center.text-lg-left
+                .d-block.d-lg-flex.align-items-center
+                  .image.image-small.text-center.mb-3.mb-lg-0.mr-lg-3
+                    div class="img-fluid flag-sprite #{fixture.home.short_name}"
+                  .text
+                    h3 class="h5 mb-0 text-black"= fixture.home.real_name
+                    span class="text-uppercase small country"= fixture.home.wrapper_name
+
+            .col-md-4.col-lg-4.text-center.mb-4.mb-lg-0
+              .d-inline-block
+                .bg-black.py-2.px-4.mb-2.text-white.d-inline-block.rounded
+                  span class="h5"
+                    - if fixture.result.present?
+                      = "#{(fixture.result.positive? ? fixture.away : fixture.home).real_name} by #{fixture.result.abs}"
+                    - else
+                      = fixture.at.strftime('%d %b %y, %l:%M%P')
+
+            .col-md-4.col-lg-4.text-center.text-lg-right
+              div
+                .d-block.d-lg-flex.align-items-center
+                  .image.image-small.ml-lg-3.mb-3.mb-lg-0.order-2
+                    div class="img-fluid flag-sprite #{fixture.away.short_name}"
+                  .text.order-1.w-100
+                    h3 class="h5 mb-0 text-black"= fixture.away.real_name
+                    span class="text-uppercase small country"= fixture.home.wrapper_name
+
+
+/ = form_tag fixtures_path(paramify) do
+/   table.table
+/     - @fixtures.each do |fixture|
+/       tr
+/         td
+/           = fixture.home.name
+/           '  v
+/           = fixture.away.name
+/         td= fixture.at.strftime('%d %b %y, %l:%M%P')
+/         td= fixture.venue
+/         - if current_admin
+/           td
+/             - if fixture.at < Time.now.utc
+/               = text_field_tag "fixtures[fix_#{fixture.id}]", fixture.result
+/             - else
+/               ' Pending

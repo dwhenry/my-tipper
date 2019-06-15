@@ -16,7 +16,8 @@
 		}
 	}
 	&, .row {
-		min-height: 600px;
+		min-height: 400px;
+        max-height: 500px;
 		height: calc(100vh - 174px);
 	}
 	h1 {
