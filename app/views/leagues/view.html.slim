@@ -1,32 +1,60 @@
 - content_for :header do
-  | Results
+  | League results for:
+  br
+  = @league.name
 
+.site-section.bg-light data-aos="fade-up"
+  .container
+    h2 class="text-uppercase text-black font-weight-bold mb-3"= "#{@league.name} (RWC #{event})"
 
-table.table
-  tr
-    th League name
-    td= @league.event ? "World Cup #{@league.name}" : @league.name
-  tr
-    th Member
-    td.text-center
-      = @league.users.count
-  tr
-    th Private
-    td.text-center
-      = @league.public ? 'No' : 'Yes'
-  - if @league.password.present?
-    tr
-      th Password
-      td.text-center
-        = @league.password
-br
-table.table
-  tr
-    th Competitor
-    th Points
-    th Position
-  - @league.users.each do |user|
-    tr
-      td= link_to user.name, results_path(paramify(user: user.id))
-      td.text-center= @points[user.id] || 0
-      td.text-center= (@points.values.index(@points[user.id]) || 0) + 1
+    .row.align-items-first
+      .col-lg-7
+        - @league.users.sort_by { |u| @points.values.index(@points[u.id]) || 0 }.each do |user|
+          - next unless @points[user.id]
+          .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+            .col-md-6.col-lg-6.mb-6.mb-lg-0
+              .d-block.d-lg-flex
+                .text
+                  h3 class="h5 mb-0 text-black"= link_to user.name, results_path(paramify(user: user.id))
+                  span class="text-uppercase small country" Competitor
+
+            .col-md-3.col-lg-3.mb-3.mb-lg-0
+              .d-block.d-lg-flex
+                .text
+                  h3 class="h5 mb-0 text-black"= @points[user.id]
+                  span class="text-uppercase small country" Points
+
+            .col-md-3.col-lg-3.mb-3.mb-lg-0
+              .d-block.d-lg-flex
+                .text
+                  h3 class="h5 mb-0 text-black"
+                    - index = @points.values.index(@points[user.id])
+                    = index ? index + 1 : 'Pending'
+                  span class="text-uppercase small country" Position
+
+      .col-lg-5
+        .p-4.border.mb-3.bg-white
+          .row
+            .col-md-12
+              H3= @league.name
+
+          .row
+            .col-md-6 Members
+            .col-md-6= @league.users.count
+
+          .row
+            .col-md-6 Access
+            .col-md-6= @league.public? ? 'Public' : 'Private'
+
+          - if @league.password.present?
+            .row
+              .col-md-6 Password
+              .col-md-6= @league.password
+
+          .row
+            .col-md-12
+              h4 Other leagues
+            - current_user.leagues.order("case when event then concat('RWC ', name) else name end").each do |l|
+              - next if l == league
+              .col-md-12
+                = link_to l.name, view_league_path(l)
