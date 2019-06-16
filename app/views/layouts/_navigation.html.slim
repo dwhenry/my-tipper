@@ -8,28 +8,29 @@
   .site-mobile-menu-body
 
 header class="site-navbar absolute transparent" role="banner"
-  .py-3
-    .container
-      .row.align-items-center
-        .col-6.col-md-3
-          / a href="#" class="text-secondary px-2 pl-0"
-          /   span class="icon-facebook"
-          / a href="#" class="text-secondary px-2"
-          /   span class="icon-instagram"
-          / a href="#" class="text-secondary px-2"
-          /   span class="icon-twitter"
-          / a href="#" class="text-secondary px-2"
-          /   span class="icon-linkedin"
-
-        .col-6.col-md-9.text-right
-          .d-inline-block
-            a href="#" class="text-secondary p-2 d-flex align-items-center"
-              span class="icon-envelope mr-3"
-              span class="d-none d-md-block" david@decoybecoy.com
-          / .d-inline-block
-          /   a href="#" class="text-secondary p-2 d-flex align-items-center"
-          /     span class="icon-phone mr-0 mr-md-3"
-          /     span class="d-none d-md-block" +1 232 3532 321
+  br
+  / .py-3
+  /   .container
+  /     .row.align-items-center
+  /       .col-6.col-md-3
+  /         / a href="#" class="text-secondary px-2 pl-0"
+  /         /   span class="icon-facebook"
+  /         / a href="#" class="text-secondary px-2"
+  /         /   span class="icon-instagram"
+  /         / a href="#" class="text-secondary px-2"
+  /         /   span class="icon-twitter"
+  /         / a href="#" class="text-secondary px-2"
+  /         /   span class="icon-linkedin"
+  /
+  /       .col-6.col-md-9.text-right
+  /         .d-inline-block
+  /           a href="#" class="text-secondary p-2 d-flex align-items-center"
+  /             span class="icon-envelope mr-3"
+  /             span class="d-none d-md-block" david@decoybecoy.com
+  /         / .d-inline-block
+  /         /   a href="#" class="text-secondary p-2 d-flex align-items-center"
+  /         /     span class="icon-phone mr-0 mr-md-3"
+  /         /     span class="d-none d-md-block" +1 232 3532 321
 
   nav class="site-navigation position-relative text-right bg-black text-md-right" role="navigation"
     .container.position-relative
@@ -65,7 +66,7 @@ header class="site-navbar absolute transparent" role="banner"
                 li class="has-children"
                   a href="#" Current leagues
                   ul class="dropdown"
-                    li= link_to 'All players', current_path(league: nil)
+                    li= link_to League::ALL_PLAYERS, current_path(league: nil)
                     - current_user.non_event_leagues.each do |league|
                       li= link_to "#{league.name} players", current_path(league: league.name)
 

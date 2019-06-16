@@ -1,6 +1,8 @@
 require 'securerandom'
 
 class League < ActiveRecord::Base
+  ALL_PLAYERS = 'All players'.freeze
+
   has_many :players
   has_many :users, through: :players
   has_many :fixtures, foreign_key: :event, primary_key: :name

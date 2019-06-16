@@ -8,7 +8,7 @@ class ResultsController < ApplicationController
     # fixtures = fixtures.where(['at < ?', Time.now.utc])
     fixtures = fixtures.all
 
-    user_ids = League.find_by!(name: params[:league] || event).users.pluck(:id)
+    user_ids = League.find_by!(name: params[:league] || League::ALL_PLAYERS).users.pluck(:id)
 
     @rounds = {}
     results = Hash.new(nil)

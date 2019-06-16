@@ -11,7 +11,7 @@ class SimplifyLeagues < ActiveRecord::Migration
       l.delete
     end
 
-    league.update!(name: 'All players')
+    league.update!(name: League::ALL_PLAYERS)
     users -= league.users
     users.each do |user|
       Player.create!(user: user, league: league)
