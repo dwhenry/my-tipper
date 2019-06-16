@@ -5,7 +5,7 @@
   .row
     .col-md-12#picks
 
-      h2 class="h6 text-uppercase text-black font-weight-bold mb-3"= "Upcoming RWC #{event} picks"
+      h2 class="text-uppercase text-black font-weight-bold mb-3"= "Upcoming RWC #{event} picks"
 
       - @upcoming_fixtures.each do |fixture|
         .row.align-items-center
@@ -43,7 +43,7 @@
   .row
     .col-md-12
 
-      h2 class="h6 text-uppercase text-black font-weight-bold mb-3"= "Past RWC #{event} picks"
+      h2 class="text-uppercase text-black font-weight-bold mb-3"= "Past RWC #{event} picks"
 
       - @past_fixtures.each do |fixture|
         .row.align-items-center

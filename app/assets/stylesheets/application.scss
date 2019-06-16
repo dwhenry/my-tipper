@@ -15,7 +15,7 @@ $body-color: #AADAE3;
 //@import 'modules/navigation';
 @import 'modules/home-page';
 @import 'modules/flags';
-@import 'local_cdn/icomoon'
+@import 'local_cdn/icomoon';
 //
 //body {
 //  background: $body-color;
@@ -47,3 +47,11 @@ $body-color: #AADAE3;
 //  }
 //
 //}
+
+#date-countdown {
+  font-size: 0.7rem;
+
+  @include media-breakpoint-up(sm) {
+    font-size: 1.1rem;
+  }
+}

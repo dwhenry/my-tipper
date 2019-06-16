@@ -1,11 +1,10 @@
 - content_for :header do
   | Matches
 
-
 .row
   .col-md-12
 
-    h2 class="h6 text-uppercase text-black font-weight-bold mb-3"= "RWC #{event} Matches"
+    h2 class="text-uppercase text-black font-weight-bold mb-3"= "RWC #{event} Matches"
 
     - @fixtures.each do |fixture|
       .row.align-items-center

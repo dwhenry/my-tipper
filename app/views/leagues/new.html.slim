@@ -1,13 +1,42 @@
-.access
-  h3 Create a new league
+- content_for :header do
+  | Create league
 
-  = simple_form_for @league do |f|
-    .field
-      = f.input :name, placeholder: 'League name'
-    .field
-      = f.input :password, type: 'password', placeholder: 'Optional'
-    .field
-      = f.label :public do
-        = f.check_box :public
-        |  Public
-    = f.submit 'Create League', class: 'btn'
+.site-section.bg-light data-aos="fade-up"
+  .container
+    .row.align-items-first
+      .col-md-7
+        = form_for(@league, html: { class: 'bg-white' }) do |f|
+          .p-3.p-lg-5.border
+            .form-group.row
+              .col-md-12
+                = f.label :name, class: "text-black" do
+                  | League name <span class="text-danger">*</span>
+                = f.text_field :name, autofocus: true, class: "form-control"
+
+            .form-group.row
+              .col-md-12
+                = f.label :password, class: "text-black" do
+                  | Password <span class="text-danger">*</span>
+                = f.password_field :password, class: "form-control"
+
+            .form-group.row
+              .col-md-12
+                = f.check_box :public
+                '
+                = f.label :public
+
+            .form-group.row
+              .col-lg-12
+                = f.submit "Create league", class: "btn btn-primary btn-lg btn-block"
+
+      .col-md-5
+        .p-4.border.mb-3.bg-white
+          H3 Coming Soon
+
+
+          p class="mb-4"
+            | Prize definitions for your league
+
+          p class="mb-4"
+            | You would need to arrange and distribute prizes, but this would allow you to set conditions for entry
+            | and specify a prize for the winner
