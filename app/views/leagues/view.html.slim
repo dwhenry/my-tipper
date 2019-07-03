@@ -10,7 +10,7 @@
     .row.align-items-first
       .col-lg-7
         - @league.users.sort_by { |u| @points.values.index(@points[u.id]) || 0 }.each do |user|
-          - next unless @points[user.id]
+          - next unless @points[user.id] || @points.empty?
           .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
             .col-md-6.col-lg-6.mb-6.mb-lg-0
               .d-block.d-lg-flex

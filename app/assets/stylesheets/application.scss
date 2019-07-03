@@ -16,37 +16,6 @@ $body-color: #AADAE3;
 @import 'modules/home-page';
 @import 'modules/flags';
 @import 'local_cdn/icomoon';
-//
-//body {
-//  background: $body-color;
-//
-//  &.admin {
-//    background: #ffa5a4;
-//
-//    &.user {
-//      background: #ff4c51;
-//    }
-//  }
-//
-//}
-//.menu-item a {
-//  display: block;
-//}
-//// errors/what errors??
-//.errors {
-//  font-size: 10px;
-//  color: red;
-//}
-//// need to work out how to format/display bulk content on teh screen..
-//.copy-content {
-//  white-space: pre-line;
-//
-//  blockquote {
-//    margin: 10px 0;
-//    text-align: right;
-//  }
-//
-//}
 
 #date-countdown {
   font-size: 0.7rem;
