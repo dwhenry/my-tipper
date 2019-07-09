@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   end
   resources :team_wrappers
   resources :leagues do
-    member { get :view }
+    member {
+      get :view
+      post :join
+      get :join
+    }
   end
 
   resource :user do

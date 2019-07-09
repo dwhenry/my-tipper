@@ -38,8 +38,8 @@ class LeaguesController < ApplicationController
     end
   end
 
-  def update
-    @league = League.find(params[:id])
+  def join
+    @league = League.find(params[:id]) || League.find_by(code: params[:id])
     if @league.password.blank? || @league.password == params[:password]
       @league.players.create(user_id: current_user.id)
       redirect_to leagues_path(paramify)
