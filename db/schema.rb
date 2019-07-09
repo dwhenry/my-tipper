@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190616220830) do
+ActiveRecord::Schema.define(version: 20190703144024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,9 +55,12 @@ ActiveRecord::Schema.define(version: 20190616220830) do
     t.string   "password"
     t.string   "code"
     t.boolean  "public"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.boolean  "event",      default: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.boolean  "event",                 default: false
+    t.text     "prize"
+    t.text     "requirements"
+    t.boolean  "confirmation_required", default: false
   end
 
   create_table "picks", force: :cascade do |t|
@@ -75,8 +78,10 @@ ActiveRecord::Schema.define(version: 20190616220830) do
   create_table "players", force: :cascade do |t|
     t.integer  "league_id"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.text     "request_state", default: "accepted"
+    t.text     "access",        default: "player"
   end
 
   add_index "players", ["league_id"], name: "index_players_on_league_id", using: :btree

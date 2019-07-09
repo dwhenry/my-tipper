@@ -13,6 +13,7 @@ $body-color: #AADAE3;
 //@import 'modules/layout';
 //@import 'modules/random';
 //@import 'modules/navigation';
+@import 'modules/checkbox';
 @import 'modules/home-page';
 @import 'modules/flags';
 @import 'local_cdn/icomoon';
@@ -22,5 +23,19 @@ $body-color: #AADAE3;
 
   @include media-breakpoint-up(sm) {
     font-size: 1.1rem;
+  }
+}
+
+@each $color, $value in $colors {
+  .#{$color} { color: #{$value} }
+}
+
+.field_with_errors {
+  textarea, input {
+    border-color: red;
+  }
+
+  .field_with_errors {
+    display: inline;
   }
 }

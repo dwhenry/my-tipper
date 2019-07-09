@@ -30,7 +30,7 @@ class LeaguesController < ApplicationController
   end
 
   def create
-    @league = League.new(params.require(:league).permit(:name, :public, :password))
+    @league = League.new(league_params)
     if @league.create(current_user)
       redirect_to leagues_path(paramify(highlight: @league.id))
     else
@@ -64,5 +64,18 @@ class LeaguesController < ApplicationController
                 .group(:user_id)
                 .order('sum(picks.score)')
                 .sum('picks.score')
+  end
+
+  private
+
+  def league_params
+    params.require(:league).permit(
+      :name,
+      :public,
+      :password,
+      :prize,
+      :requirements,
+      :confirmation_required
+    )
   end
 end

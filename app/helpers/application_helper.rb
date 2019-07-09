@@ -28,4 +28,11 @@ module ApplicationHelper
     uri.query       = URI.encode_www_form(new_params.to_a)
     uri.to_s
   end
+
+  def render_errors(form, field)
+    return if form.object.valid?
+    errors = form.object.errors.full_messages_for(field)
+    return unless errors
+    content_tag('div', errors.join('. '), class: 'field_with_errors red bold')
+  end
 end

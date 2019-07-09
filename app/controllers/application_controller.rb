@@ -10,7 +10,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def paramify(vals={})
-
     {event: event, league: league}.merge(vals)
   end
 
@@ -34,11 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   def league
-    if params[:league].present?
-      params[:league].is_a?(String) ? params[:league] : event
-    else
-      event
-    end
+    params[:league].presence
   end
 
   def only_one_login
