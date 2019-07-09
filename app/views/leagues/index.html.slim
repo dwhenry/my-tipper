@@ -7,7 +7,7 @@
     h2 class="text-uppercase text-black font-weight-bold mb-3" My leagues
 
     - @leagues.each do |league|
-      - next unless @members[league.id] || league.event?
+      - next unless @members[league.id] == 'accepted' || league.event?
       .row.align-items-center
         .col-md-12
           .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
@@ -46,12 +46,58 @@
               .col-md-12 id= "invite-#{league.id}" style = 'display: none'
                 = join_league_url(league.code, password: league.password)
 
+- if @members.values.include?('requested')
+  .row
+    .col-md-12
+      h2 class="text-uppercase text-black font-weight-bold mb-3" Pending Leagues
+
+      - @leagues.each do |league|
+        - next unless @members[league.id] == 'requested'
+        .row.align-items-center
+          .col-md-12
+            .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+              .col-md-4.col-lg-4.mb-4.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    h3 class="h5 mb-0 text-black"= league.event ? "World Cup #{league.name}" : league.name
+                    span class="text-uppercase small country" League name
+
+              .col-6.col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    h3 class="h5 mb-0 text-black"= league.player_count
+                    span class="text-uppercase small country" Players
+
+              .col-6.d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    h3 class="h5 mb-0 text-black"= league.public? ? 'Public' : 'Private'
+
+              .col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    = link_to "View", view_league_path(league), class: "btn btn-secondary btn-sm btn-block"
+              .col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    - unless league.event?
+                      = link_to "Invite", '#', onclick: "$('#invite-#{league.id}').toggle(); return false;", class: "btn btn-secondary btn-sm btn-block"
+              .col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    - unless league.event?
+                      = link_to "Leave", league_path(league, paramify), method: 'delete', class: "btn btn-danger btn-sm btn-block"
+              - unless league.event?
+                .col-md-12 id="invite-#{league.id}" style='display: none'
+                  = join_league_url(league.code, password: league.password)
+
 .row
   .col-md-12
     h2 class="text-uppercase text-black font-weight-bold mb-3" Other leagues
 
     - @leagues.each do |league|
-      - next if @members[league.id] || league.event?
+      - next if league.event?
+      - next if %w[accepted requested].include?(@members[league.id])
       .row.align-items-center
         .col-md-12
           .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry

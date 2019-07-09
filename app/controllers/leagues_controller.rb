@@ -12,18 +12,18 @@ class LeaguesController < ApplicationController
       .order('event DESC, count(players.id) DESC, name')
       .having('count(players.id) > 0')
       .limit(10)
-    @members = Player.where(user_id: current_user.id).group(:league_id).maximum(:user_id)
+    @members = Player.where(user_id: current_user.id).group(:league_id).maximum(:request_state)
   end
 
-  def show
-    @league = League.find_by(code: params[:id])
-    if @league.password.blank? || @league.password == params[:password]
-      @league.players.create(user_id: current_user.id)
-      redirect_to leagues_path(paramify)
-    else
-      render :password
-    end
-  end
+  # def show
+  #   @league = League.find_by(code: params[:id])
+  #   if @league.password.blank? || @league.password == params[:password]
+  #     @league.players.create(user_id: current_user.id)
+  #     redirect_to leagues_path(paramify)
+  #   else
+  #     render :password
+  #   end
+  # end
 
   def new
     @league = League.new(public: true)
@@ -41,7 +41,9 @@ class LeaguesController < ApplicationController
   def join
     @league = League.find(params[:id]) || League.find_by(code: params[:id])
     if @league.password.blank? || @league.password == params[:password]
-      @league.players.create(user_id: current_user.id)
+      request_state = @league.confirmation_required ? 'requested' : 'accepted'
+      @league.players.create(user_id: current_user.id, request_state: request_state, access: 'player')
+
       redirect_to leagues_path(paramify)
     else
       flash[:error] = 'Invalid password' if params[:password]

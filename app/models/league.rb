@@ -16,7 +16,7 @@ class League < ActiveRecord::Base
     League.transaction do
       self.code = SecureRandom.hex
       save || raise(ActiveRecord::Rollback)
-      players.create(user_id: current_user.id) || raise(ActiveRecord::Rollback)
+      players.create(user_id: current_user.id, request_state: 'accepted', access: 'primary') || raise(ActiveRecord::Rollback)
       return true
     end
     return false
