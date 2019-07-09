@@ -60,7 +60,8 @@ class LeaguesController < ApplicationController
   end
 
   def view
-    @league = League.includes(:users).find(params[:id])
+    @league = League.includes(players: :user).find(params[:id])
+    @current_player = Player.find_by(league_id: @league.id, user_id: current_user.id)
     @points = Fixture.where(event: event, picks: { user: @league.users })
                 .includes(:picks)
                 .group(:user_id)
