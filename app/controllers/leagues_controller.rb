@@ -76,7 +76,7 @@ class LeaguesController < ApplicationController
 
   def action
     current_player = Player.find_by!(league_id: params[:id], user_id: current_user.id)
-    player = Player.find_by!(league_id: params[:id], params[:player_id])
+    player = Player.find_by!(league_id: params[:id], user_id: params[:player_id])
 
     raise('Not an admin') unless current_player.access != 'player'
 
