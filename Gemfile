@@ -34,7 +34,9 @@ gem 'unicorn'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec-rails'
+  gem 'factory_bot'
   gem 'pry-byebug'
+  gem 'capybara'
 end
 
 group :development do

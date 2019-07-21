@@ -16,6 +16,7 @@ module ApplicationHelper
   end
 
   def current_path(changes={})
+    return root_path if request.env['REQUEST_URI'].blank?
     uri = URI(request.env['REQUEST_URI'])
     existing_params = URI.decode_www_form(uri.query || '')
     new_params = changes.each_with_object(Hash[existing_params]) do |(k, v), h|
