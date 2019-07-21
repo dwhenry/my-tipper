@@ -1,6 +1,6 @@
 require 'securerandom'
 
-class League < ActiveRecord::Base
+class League < ApplicationRecord
   ALL_PLAYERS = 'All players'.freeze
 
   has_many :players

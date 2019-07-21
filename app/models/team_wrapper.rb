@@ -1,4 +1,4 @@
-class TeamWrapper < ActiveRecord::Base
+class TeamWrapper < ApplicationRecord
   belongs_to :team
   delegate :short_name, to: :team, allow_nil: true
 

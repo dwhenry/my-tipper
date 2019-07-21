@@ -1,4 +1,4 @@
-class Pick < ActiveRecord::Base
+class Pick < ApplicationRecord
   belongs_to :user
   belongs_to :fixture
 
