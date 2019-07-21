@@ -1,4 +1,4 @@
-class BetterLeagues < ActiveRecord::Migration
+class BetterLeagues < ActiveRecord::Migration[5.2]
   def change
     add_column :leagues, :prize, :text
     add_column :leagues, :requirements, :text
