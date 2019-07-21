@@ -38,25 +38,25 @@
                 .d-block.d-lg-flex
                   - if @current_player.access == 'primary' && @current_player != player
                     - if player.access == 'player'
-                      = link_to 'Make Admin', '', class: "btn btn-secondary btn-sm btn-block"
+                      = button_to 'Make Admin', action_league_path(action: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to make this player an admin?', class: "btn btn-secondary btn-sm btn-block"
                     - else
-                      = link_to 'Remove Admin', '', class: "btn btn-secondary btn-sm btn-block"
+                      = button_to 'Remove Admin', action_league_path(action: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to remove admin rights for this player?', class: "btn btn-secondary btn-sm btn-block"
               .col-3.mb-3.mb-lg-0
                 .d-block.d-lg-flex
                   .text
                     h3 class="h5 mb-0 text-black"
                       = player.request_state.capitalize
                     span class="text-uppercase small country" Status
-              - if player.access != 'player'
+              - if @current_player.access != 'player'
                 .col-3
                   .d-block.d-lg-flex
                     - if player.request_state == 'requested'
-                      = link_to 'Approve', '', class: "btn btn-secondary btn-sm btn-block"
+                      = button_to 'Approve', action_league_path(action: 'approve', player_id: player.id), class: "btn btn-secondary btn-sm btn-block"
                     - elsif player.request_state == 'accepted'
-                      = link_to 'Remove', '', class: "btn btn-secondary btn-sm btn-block"
+                      = button_to 'Remove', action_league_path(action: 'remove', player_id: player.id), confirm: 'Are you sure you want to remove this player from the league?', class: "btn btn-secondary btn-sm btn-block"
                 .col-3
                   .d-block.d-lg-flex
-                    = link_to 'Bane', '', class: "btn btn-secondary btn-sm btn-block"
+                    = button_to 'Bane', action_league_path(action: 'bane', player_id: player.id), confirm: 'You will not be able to unbane this player. Confirm?', class: "btn btn-secondary btn-sm btn-block"
       .col-lg-5
         .p-4.border.mb-3.bg-white
           .row

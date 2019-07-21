@@ -42,7 +42,12 @@ class LeaguesController < ApplicationController
     @league = League.find(params[:id]) || League.find_by(code: params[:id])
     if @league.password.blank? || @league.password == params[:password]
       request_state = @league.confirmation_required ? 'requested' : 'accepted'
-      @league.players.create(user_id: current_user.id, request_state: request_state, access: 'player')
+      player = @league.players.find_by(user_id: current_user.id)
+      if player
+        player.update(request_state: 'requested') if player.request_status == 'removed'
+      else
+        @league.players.create(user_id: current_user.id, request_state: request_state, access: 'player')
+      end
 
       redirect_to leagues_path(paramify)
     else
@@ -67,6 +72,32 @@ class LeaguesController < ApplicationController
                 .group(:user_id)
                 .order('sum(picks.score)')
                 .sum('picks.score')
+  end
+
+  def action
+    current_player = Player.find_by!(league_id: params[:id], user_id: current_user.id)
+    player = Player.find_by!(league_id: params[:id], params[:player_id])
+
+    raise('Not an admin') unless current_player.access != 'player'
+
+    case params['action']
+    when 'make_admin'
+      return if player.access != 'player'
+      player.update!(access: 'admin')
+    when 'remove_admin'
+      return if player.access == 'primary'
+      player.update!(access: 'player')
+    when 'approve'
+      player.request_state == 'approved'
+    when 'remove'
+      return if player.access == 'primary'
+      player.request_state == 'removed'
+    when 'bane'
+      return if player.access == 'primary'
+      player.request_state == 'baned'
+    else
+      raise "Unknown action: #{params[:action]}"
+    end
   end
 
   private

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get :view
       post :join
       get :join
+      post :action
     }
   end
 
