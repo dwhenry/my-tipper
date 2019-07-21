@@ -6,7 +6,12 @@ RSpec.describe 'League admin' do
   it 'I can create a new league' do
     logged_in_as(user) do
       visit new_league_path
+
+      fill_in 'league_name', with: 'Test League'
+      click_on 'Create league'
     end
+
+    expect(League.last).to have_attributes(name: 'Test League')
   end
 
   context 'when confirmation required' do

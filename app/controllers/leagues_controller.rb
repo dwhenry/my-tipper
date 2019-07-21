@@ -32,7 +32,7 @@ class LeaguesController < ApplicationController
   def create
     @league = League.new(league_params)
     if @league.create(current_user)
-      redirect_to leagues_path(paramify(highlight: @league.id))
+      redirect_to leagues_path(paramify(highlight: @league.id, league: nil))
     else
       render :new
     end
