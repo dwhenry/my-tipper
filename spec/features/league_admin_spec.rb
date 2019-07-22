@@ -15,8 +15,33 @@ RSpec.describe 'League admin' do
   end
 
   context 'when confirmation required' do
-    it 'request and approval to joining a league'
+    let!(:league) { create(:league, :confirmation_required) }
+    let(:admin) { league.players.where(access: 'primary').first.user }
+
+    it 'request and approval to joining a league' do
+      logged_in_as(user) do
+        visit join_league_path(id: league.code)
+      end
+
+      player_request = Player.find_by(user_id: user.id)
+
+      expect(player_request.request_state).to eq('requested')
+
+      logged_in_as(admin) do
+        visit leagues_path
+
+        within '.leagues--requested' do
+          click_on 'Approve'
+        end
+      end
+
+      player_request.reload
+
+      expect(player_request.request_state).to eq('accepted')
+    end
+
     it 'request and reject to joining a league'
+    it 'can not see leagues you have been baned from'
   end
 
   context 'when confirmation required' do

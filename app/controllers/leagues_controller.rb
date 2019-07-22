@@ -3,16 +3,20 @@ class LeaguesController < ApplicationController
 
   def index
     @leagues = League.joins(%{
-        LEFT JOIN players
-          ON players.league_id = leagues.id
+        LEFT JOIN (
+          SELECT league_id, count(1) as player_count
+          FROM players
+          GROUP BY league_id
+        ) as p ON p.league_id = leagues.id
       })
-      .select(:id, :name, :password, :public, :code, 'count(players.id) as player_count', :event)
-      .group(:id, :name, :password, :public, :code)
+      .select('*', :player_count)
       .where(['public is true or exists(select from players p where p.league_id = leagues.id and p.user_id = ?)', current_user.id])
-      .order('event DESC, count(players.id) DESC, name')
-      .having('count(players.id) > 0')
+      .order('event DESC, player_count DESC, name')
       .limit(10)
+
     @members = Player.where(user_id: current_user.id).group(:league_id).maximum(:request_state)
+    binding.pry
+    puts @members
   end
 
   # def show
@@ -39,7 +43,7 @@ class LeaguesController < ApplicationController
   end
 
   def join
-    @league = League.find(params[:id]) || League.find_by(code: params[:id])
+    @league = League.find_by(id: params[:id]) || League.find_by(code: params[:id])
     if @league.password.blank? || @league.password == params[:password]
       request_state = @league.confirmation_required ? 'requested' : 'accepted'
       player = @league.players.find_by(user_id: current_user.id)
@@ -75,6 +79,7 @@ class LeaguesController < ApplicationController
   end
 
   def action
+    binding.pry
     current_player = Player.find_by!(league_id: params[:id], user_id: current_user.id)
     player = Player.find_by!(league_id: params[:id], user_id: params[:player_id])
 
