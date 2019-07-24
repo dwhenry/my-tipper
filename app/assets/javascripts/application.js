@@ -28,3 +28,7 @@
 // require sportz/jquery.magnific-popup.min
 //= require sportz/aos
 //= require sportz/main
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

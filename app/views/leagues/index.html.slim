@@ -20,7 +20,21 @@
             .col-6.col-md-2.col-lg-1.mb-1.mb-lg-0
               .d-block.d-lg-flex
                 .text
-                  h3 class="h5 mb-0 text-black"= league.player_count
+                  - title = "#{league.player_count} approved"
+                  - if %w[admin primary].include?(@access[league.id])
+                    - title << "<br>#{league.requested_count} requested<br>#{league.baned_count} baned"
+                  h3 class="h5 mb-0 text-black" data-toggle="tooltip" data-html="true" title=title
+                    = league.player_count
+                    - if %w[admin primary].include?(@access[league.id])
+                      div style="display: inline; font-size: 12px; "
+                        '  /
+                        = league.requested_count
+                        '  /
+                        = league.baned_count
+                  .tooltip
+                    = "#{league.player_count} players"
+                    - if %w[admin primary].include?(@access[league.id])
+                      = ", #{league.requested_count} requested, #{league.baned_count} baned"
                   span class="text-uppercase small country" Players
 
             .col-6.d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
@@ -45,6 +59,10 @@
             - unless league.event?
               .col-md-12 id= "invite-#{league.id}" style = 'display: none'
                 = join_league_url(league.code, password: league.password)
+            - if %w[admin primary].include?(@access[league.id]) && league.requested_count.positive?
+              .col-md-12
+                .text style="text-align: center"
+                  = link_to 'Player approval required', view_league_path(league), class: "btn btn-success btn-sm"
 
 - if @members.values.include?('requested')
   .row.leagues--requested
@@ -110,7 +128,8 @@
             .col-6.col-md-2.col-lg-1.mb-1.mb-lg-0
               .d-block.d-lg-flex
                 .text
-                  h3 class="h5 mb-0 text-black"= league.player_count
+                  h3 class="h5 mb-0 text-black"
+                    = league.player_count
                   span class="text-uppercase small country" Players
 
             .col-6.d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0

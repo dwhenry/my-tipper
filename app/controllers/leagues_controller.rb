@@ -4,19 +4,23 @@ class LeaguesController < ApplicationController
   def index
     @leagues = League.joins(%{
         LEFT JOIN (
-          SELECT league_id, count(1) as player_count
+          SELECT
+            league_id,
+            sum(case request_state when 'accepted' then 1 else 0 end) as player_count,
+            sum(case request_state when 'requested' then 1 else 0 end) as requested_count,
+            sum(case request_state when 'baned' then 1 else 0 end) as baned_count
           FROM players
           GROUP BY league_id
         ) as p ON p.league_id = leagues.id
       })
-      .select('*', :player_count)
-      .where(['public is true or exists(select from players p where p.league_id = leagues.id and p.user_id = ?)', current_user.id])
+      .select('*', :player_count, :requested_count, :baned_count)
+      .where(['public is true or exists(
+         select from players p where p.league_id = leagues.id and p.user_id = ? and p.request_state in (\'requested\',\'accepted\'))', current_user.id])
       .order('event DESC, player_count DESC, name')
       .limit(10)
 
     @members = Player.where(user_id: current_user.id).group(:league_id).maximum(:request_state)
-    binding.pry
-    puts @members
+    @access = Player.where(user_id: current_user.id).group(:league_id).maximum(:access)
   end
 
   # def show
@@ -70,7 +74,7 @@ class LeaguesController < ApplicationController
 
   def view
     @league = League.includes(players: :user).find(params[:id])
-    @current_player = Player.find_by(league_id: @league.id, user_id: current_user.id)
+    @current_player = @league.players.where(request_state: 'accepted').find_by!(user_id: current_user.id)
     @points = Fixture.where(event: event, picks: { user: @league.users })
                 .includes(:picks)
                 .group(:user_id)
@@ -79,7 +83,6 @@ class LeaguesController < ApplicationController
   end
 
   def action
-    binding.pry
     current_player = Player.find_by!(league_id: params[:id], user_id: current_user.id)
     player = Player.find_by!(league_id: params[:id], user_id: params[:player_id])
 

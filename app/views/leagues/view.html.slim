@@ -5,13 +5,13 @@
 
 .site-section.bg-light data-aos="fade-up"
   .container
-    h2 class="text-uppercase text-black font-weight-bold mb-3"= "#{@league.name} (RWC #{event})"
-
     .row.align-items-first
       .col-lg-7
-        - @league.players.sort_by { |p| @points.values.index(@points[p.user_id]) || 0 }.each do |player|
+        h2 class="text-uppercase text-black font-weight-bold mb-3"= "#{@league.name} (RWC #{event})"
+        - @league.players.sort_by { |p| [@points.values.index(@points[p.user_id]) || 1_000_000, p.user.name] }.each do |player|
           - user = player.user
-          - next unless @points[user.id] || @points.empty?
+          - next unless player.request_state == 'accepted'
+          / - next unless @points[user.id] || @points.empty?
           .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
             .col-md-6.col-lg-6.mb-6.mb-lg-0
               .d-block.d-lg-flex
@@ -34,29 +34,46 @@
                   span class="text-uppercase small country" Position
 
             - if @league.confirmation_required?
-              .col-3
-                .d-block.d-lg-flex
+              .col-0.col-md-3
+              .col-4.col-md-3
+                .d-block
                   - if @current_player.access == 'primary' && @current_player != player
                     - if player.access == 'player'
                       = button_to 'Make Admin', action_league_path(action: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to make this player an admin?', class: "btn btn-secondary btn-sm btn-block"
                     - else
-                      = button_to 'Remove Admin', action_league_path(action: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to remove admin rights for this player?', class: "btn btn-secondary btn-sm btn-block"
-              .col-3.mb-3.mb-lg-0
+                      = button_to 'Remove Admin', action_league_path(action: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to remove admin rights for this player?', class: "btn btn-danger btn-sm btn-block"
+              - if @current_player.access != 'player'
+                .col-4.col-md-3
+                  .d-block
+                    = button_to 'Remove', action_league_path(action: 'remove', player_id: player.id), confirm: 'Are you sure you want to remove this player from the league?', class: "btn btn-danger btn-sm btn-block"
+                .col-4.col-md-3
+                  .d-block
+                    = button_to 'Bane', action_league_path(action: 'bane', player_id: player.id), confirm: 'You will not be able to unbane this player. Confirm?', class: "btn btn-danger btn-sm btn-block"
+
+        - if %w[admin primary].include?(@current_player.access)
+          br
+          h2 class="text-uppercase text-black font-weight-bold mb-3" Player pending acceptance
+          - @league.players.sort_by { |p| p.user.name }.each do |player|
+            - user = player.user
+            - next unless player.request_state == 'requested'
+            .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+              .col-md-6.col-lg-6.mb-6.mb-lg-0
                 .d-block.d-lg-flex
                   .text
-                    h3 class="h5 mb-0 text-black"
-                      = player.request_state.capitalize
-                    span class="text-uppercase small country" Status
-              - if @current_player.access != 'player'
-                .col-3
-                  .d-block.d-lg-flex
-                    - if player.request_state == 'requested'
-                      = button_to 'Approve', action_league_path(action: 'approve', player_id: player.id), class: "btn btn-secondary btn-sm btn-block"
-                    - elsif player.request_state == 'accepted'
-                      = button_to 'Remove', action_league_path(action: 'remove', player_id: player.id), confirm: 'Are you sure you want to remove this player from the league?', class: "btn btn-secondary btn-sm btn-block"
-                .col-3
-                  .d-block.d-lg-flex
-                    = button_to 'Bane', action_league_path(action: 'bane', player_id: player.id), confirm: 'You will not be able to unbane this player. Confirm?', class: "btn btn-secondary btn-sm btn-block"
+                    h3 class="h5 mb-0 text-black"= link_to user.name, results_path(paramify(user: user.id))
+                    span class="text-uppercase small country" Competitor
+
+              .col-4.col-md-2.col-lg-2.mb-3.mb-lg-0
+                .d-block
+                  = button_to "Approve", action_league_path(action: 'approve'), class: "btn btn-success btn-sm btn-block"
+
+              .col-4.col-md-2.col-lg-2.mb-3.mb-lg-0
+                .d-block
+                  = button_to "Reject", action_league_path(action: 'remove'), class: "btn btn-danger btn-sm btn-block"
+
+              .col-4.col-md-2.col-lg-2.mb-3.mb-lg-0
+                .d-block
+                  = button_to 'Bane', action_league_path(action: 'bane', player_id: player.id), confirm: 'You will not be able to unbane this player. Confirm?', class: "btn btn-secondary btn-sm btn-block"
       .col-lg-5
         .p-4.border.mb-3.bg-white
           .row
