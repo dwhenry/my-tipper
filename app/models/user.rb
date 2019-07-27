@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -8,6 +8,6 @@ class User < ActiveRecord::Base
 
   has_many :picks
   has_many :players
-  has_many :non_event_leagues, -> { where(leagues: {event: false}) }, through: :players, source: :league
+  has_many :non_event_leagues, -> { where(leagues: { event: false }, players: { request_state: 'accepted' }) }, through: :players, source: :league
   has_many :leagues, through: :players
 end

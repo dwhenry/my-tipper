@@ -18,7 +18,6 @@
 //= require ./next-game-in
 
 //= require js.cookie
-//= require jstz
 //= require browser_timezone_rails/set_time_zone
 
 //= require sportz/popper.min
@@ -29,3 +28,7 @@
 // require sportz/jquery.magnific-popup.min
 //= require sportz/aos
 //= require sportz/main
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

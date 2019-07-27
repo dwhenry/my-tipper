@@ -12,31 +12,65 @@
                 = f.label :name, class: "text-black" do
                   | League name <span class="text-danger">*</span>
                 = f.text_field :name, autofocus: true, class: "form-control"
-
+                = render_errors(f, :name)
             .form-group.row
               .col-md-12
                 = f.label :password, class: "text-black" do
                   | Password <span class="text-danger">*</span>
                 = f.password_field :password, class: "form-control"
-
+                = render_errors(f, :password)
             .form-group.row
               .col-md-12
-                = f.check_box :public
-                '
-                = f.label :public
-
+                = f.label :public, class: 'checkbox-container' do
+                  = f.check_box :public, hide_errors: true
+                  | Public leagues can be view and joins by anyone                  '
+                  .checkmark
+                = render_errors(f, :public)
+            .form-group.row
+              .col-md-12
+                = f.label :prize do
+                  | Prize (Private leagues only)
+                  .small.blue
+                    | All prizes are organised and distributed by the league organiser.
+                = f.text_area :prize, class: "form-control"
+                = render_errors(f, :prize)
+            .form-group.row
+              .col-md-12
+                = f.label :requirements do
+                  | Joining Requirments (Private leagues only)
+                  .small.blue
+                    | If a prize it specified the organiser can add optional requirements
+                    | for joining the league. It is up to the organiser to ensure that player
+                    | meet any requirements for joining.
+                = f.text_area :requirements, class: "form-control"
+                = render_errors(f, :requirements)
+            .form-group.row
+              .col-md-12
+                = f.label :confirmation_required, class: 'checkbox-container' do
+                  = f.check_box :confirmation_required, hide_errors: true
+                  | Confirmation required before a player can join
+                  .checkmark
+                = render_errors(f, :confirmation_required)
             .form-group.row
               .col-lg-12
                 = f.submit "Create league", class: "btn btn-primary btn-lg btn-block"
 
       .col-md-5
         .p-4.border.mb-3.bg-white
-          H3 Coming Soon
+          H3 League Prizes
 
 
           p class="mb-4"
-            | Prize definitions for your league
+            | League organisers are now able to add prizes and joining requirements when creating new leagues.
 
           p class="mb-4"
-            | You would need to arrange and distribute prizes, but this would allow you to set conditions for entry
-            | and specify a prize for the winner
+            | To help support this a number of access controls have been added including:
+
+            ul
+              li
+                | Ability to require player acceptance into leagues. When requested the league admins now
+                | have the ability to accept, reject or ban a player from a league.
+
+              li
+                | Admin rights on a league, this includes the ability to make other players within the league
+                | admins.

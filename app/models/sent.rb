@@ -1,4 +1,4 @@
-class Sent < ActiveRecord::Base
+class Sent < ApplicationRecord
   belongs_to :user
   belongs_to :fixture
 end

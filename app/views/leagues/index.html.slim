@@ -2,13 +2,13 @@
   | Leagues
 
 
-.row
+.row.leagues--joined
   .col-md-12
     h2 class="text-uppercase text-black font-weight-bold mb-3" My leagues
 
     - @leagues.each do |league|
-      - next unless @members[league.id] || league.event?
-      .row.align-items-center
+      - next unless @members[league.id] == 'accepted' || league.event?
+      .row.align-items-center.league
         .col-md-12
           .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
             .col-md-4.col-lg-4.mb-4.mb-lg-0
@@ -17,13 +17,27 @@
                   h3 class="h5 mb-0 text-black"= league.event ? "World Cup #{league.name}" : league.name
                   span class="text-uppercase small country" League name
 
-            .col-md-2.col-lg-1.mb-1.mb-lg-0
+            .col-6.col-md-2.col-lg-1.mb-1.mb-lg-0
               .d-block.d-lg-flex
                 .text
-                  h3 class="h5 mb-0 text-black"= league.player_count
+                  - title = "#{league.player_count} approved"
+                  - if %w[admin primary].include?(@access[league.id])
+                    - title << "<br>#{league.requested_count} requested<br>#{league.baned_count} baned"
+                  h3 class="h5 mb-0 text-black" data-toggle="tooltip" data-html="true" title=title
+                    = league.player_count
+                    - if %w[admin primary].include?(@access[league.id])
+                      div style="display: inline; font-size: 12px; "
+                        '  /
+                        = league.requested_count
+                        '  /
+                        = league.baned_count
+                  .tooltip
+                    = "#{league.player_count} players"
+                    - if %w[admin primary].include?(@access[league.id])
+                      = ", #{league.requested_count} requested, #{league.baned_count} baned"
                   span class="text-uppercase small country" Players
 
-            .d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
+            .col-6.d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
               .d-block.d-lg-flex
                 .text
                   h3 class="h5 mb-0 text-black"= league.public? ? 'Public' : 'Private'
@@ -44,15 +58,65 @@
                     = link_to "Leave", league_path(league, paramify), method: 'delete', class: "btn btn-danger btn-sm btn-block"
             - unless league.event?
               .col-md-12 id= "invite-#{league.id}" style = 'display: none'
-                = league_url(league.code)
+                = join_league_url(league.code, password: league.password)
+            - if %w[admin primary].include?(@access[league.id]) && league.requested_count.positive?
+              .col-md-12
+                .text style="text-align: center"
+                  = link_to 'Player approval required', view_league_path(league), class: "btn btn-success btn-sm"
 
-.row
+- if @members.values.include?('requested')
+  .row.leagues--requested
+    .col-md-12
+      h2 class="text-uppercase text-black font-weight-bold mb-3" Pending Leagues
+
+      - @leagues.each do |league|
+        - next unless @members[league.id] == 'requested'
+        .row.align-items-center.league
+          .col-md-12
+            .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
+              .col-md-4.col-lg-4.mb-4.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    h3 class="h5 mb-0 text-black"= league.event ? "World Cup #{league.name}" : league.name
+                    span class="text-uppercase small country" League name
+
+              .col-6.col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    h3 class="h5 mb-0 text-black"= league.player_count
+                    span class="text-uppercase small country" Players
+
+              .col-6.d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    h3 class="h5 mb-0 text-black"= league.public? ? 'Public' : 'Private'
+
+              .col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    = link_to "View", view_league_path(league), class: "btn btn-secondary btn-sm btn-block"
+              .col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    - unless league.event?
+                      = link_to "Invite", '#', onclick: "$('#invite-#{league.id}').toggle(); return false;", class: "btn btn-secondary btn-sm btn-block"
+              .col-md-2.col-lg-1.mb-1.mb-lg-0
+                .d-block.d-lg-flex
+                  .text
+                    - unless league.event?
+                      = link_to "Leave", league_path(league, paramify), method: 'delete', class: "btn btn-danger btn-sm btn-block"
+              - unless league.event?
+                .col-md-12 id="invite-#{league.id}" style='display: none'
+                  = join_league_url(league.code, password: league.password)
+
+.row.leagues--joinable
   .col-md-12
     h2 class="text-uppercase text-black font-weight-bold mb-3" Other leagues
 
     - @leagues.each do |league|
-      - next if @members[league.id] || league.event?
-      .row.align-items-center
+      - next if league.event?
+      - next if %w[accepted requested].include?(@members[league.id])
+      .row.align-items-center.league
         .col-md-12
           .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
             .col-md-4.col-lg-4.mb-4.mb-lg-0
@@ -61,13 +125,14 @@
                   h3 class="h5 mb-0 text-black"= league.event ? "World Cup #{league.name}" : league.name
                   span class="text-uppercase small country" League name
 
-            .col-md-2.col-lg-1.mb-1.mb-lg-0
+            .col-6.col-md-2.col-lg-1.mb-1.mb-lg-0
               .d-block.d-lg-flex
                 .text
-                  h3 class="h5 mb-0 text-black"= league.player_count
+                  h3 class="h5 mb-0 text-black"
+                    = league.player_count
                   span class="text-uppercase small country" Players
 
-            .d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
+            .col-6.d-md-none.d-lg-block.col-lg-2.mb-2.mb-lg-0
               .d-block.d-lg-flex
                 .text
                   h3 class="h5 mb-0 text-black"= league.public? ? 'Public' : 'Private'
@@ -76,48 +141,10 @@
               .d-block.d-lg-flex
                 .text
                   = link_to "View", view_league_path(league), class: "btn btn-secondary btn-sm btn-block"
-            .col-md-2.col-lg-1.mb-1.mb-lg-0
-              .d-block.d-lg-flex
-                .text
-                  = link_to "Join", league_path(league, paramify), method: 'put', class: "btn btn-secondary btn-sm btn-block"
-            .col-md-2.col-lg-1.mb-1.mb-lg-0
-              .d-block.d-lg-flex
-                .text
+            = form_tag(join_league_path(league.code), class: "col-md-#{league.password? ? 4 : 2} col-lg-3 mb-1 mb-lg-0") do
 
-/ .btn-group
-/   = link_to 'Create league', new_league_path(paramify), class: "btn"
-/ br
-/ br
-/ table.table
-/   thead
-/     tr
-/       th Name
-/       th Players
-/       th Private
-/       th Password
-/       th
-/       th
-/       th
-/   tbody
-/     - @leagues.each do |league|
-/       tr class=("highlight" if league.id == params[:highlight].to_i)
-/         td= league.event ? "World Cup #{league.name}" : league.name
-/         td.text-center= league.player_count
-/         td.text-center= "Yes" unless league.public?
-/         td.text-center= "Yes" if league.password.present?
-/         - if league.event?
-/           td
-/           td
-/           td= link_to "View", view_league_path(league)
-/         - elsif @members[league.id]
-/           td= link_to "Leave", league_path(league, paramify), method: 'delete'
-/           td= link_to "Invite URL", '#', onclick: "$('#invite-#{league.id}').toggle(); return false;"
-/           td= link_to "View", view_league_path(league)
-/         - else
-/           td= link_to "Join", league_path(league, paramify), method: 'put'
-/           td
-/           td
-/       - if !league.event? && @members[league.id]
-/         tr id="invite-#{league.id}" style='display: none'
-/           td colspan=7
-/             = league_url(league.code)
+              .d-block.d-lg-flex
+                .text
+                  = submit_tag "Join", class: "btn btn-secondary btn-sm btn-block"
+                  '
+                  = text_field_tag :password, '', placeholder: 'Password', style: 'width: 100%' if league.password?

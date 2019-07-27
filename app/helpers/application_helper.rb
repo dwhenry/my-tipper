@@ -16,6 +16,7 @@ module ApplicationHelper
   end
 
   def current_path(changes={})
+    return root_path if request.env['REQUEST_URI'].blank?
     uri = URI(request.env['REQUEST_URI'])
     existing_params = URI.decode_www_form(uri.query || '')
     new_params = changes.each_with_object(Hash[existing_params]) do |(k, v), h|
@@ -27,5 +28,12 @@ module ApplicationHelper
     end
     uri.query       = URI.encode_www_form(new_params.to_a)
     uri.to_s
+  end
+
+  def render_errors(form, field)
+    return if form.object.valid?
+    errors = form.object.errors.full_messages_for(field)
+    return unless errors
+    content_tag('div', errors.join('. '), class: 'field_with_errors red bold')
   end
 end
