@@ -33,22 +33,21 @@
                     = index ? index + 1 : 'Pending'
                   span class="text-uppercase small country" Position
 
-            - if @league.confirmation_required?
+            - if @league.confirmation_required? && %w[admin primary].include?(@current_player.access)
               .col-0.col-md-3
               .col-4.col-md-3
                 .d-block
-                  - if @current_player.access == 'primary' && @current_player != player
+                  - if @current_player != player && player.access != 'primary'
                     - if player.access == 'player'
                       = button_to 'Make Admin', action_league_path(a: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to make this player an admin?', class: "btn btn-secondary btn-sm btn-block"
                     - else
                       = button_to 'Remove Admin', action_league_path(a: 'make_admin', player_id: player.id), confirm: 'Are you sure you want to remove admin rights for this player?', class: "btn btn-danger btn-sm btn-block"
-              - if @current_player.access != 'player'
-                .col-4.col-md-3
-                  .d-block
-                    = button_to 'Remove', action_league_path(a: 'remove', player_id: player.id), confirm: 'Are you sure you want to remove this player from the league?', class: "btn btn-danger btn-sm btn-block"
-                .col-4.col-md-3
-                  .d-block
-                    = button_to 'Bane', action_league_path(a: 'bane', player_id: player.id), confirm: 'You will not be able to unbane this player. Confirm?', class: "btn btn-danger btn-sm btn-block"
+              .col-4.col-md-3
+                .d-block
+                  = button_to 'Remove', action_league_path(a: 'remove', player_id: player.id), confirm: 'Are you sure you want to remove this player from the league?', class: "btn btn-danger btn-sm btn-block"
+              .col-4.col-md-3
+                .d-block
+                  = button_to 'Bane', action_league_path(a: 'bane', player_id: player.id), confirm: 'You will not be able to unbane this player. Confirm?', class: "btn btn-danger btn-sm btn-block"
 
         - if %w[admin primary].include?(@current_player.access)
           br

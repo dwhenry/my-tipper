@@ -52,9 +52,9 @@ class LeaguesController < ApplicationController
       request_state = @league.confirmation_required ? 'requested' : 'accepted'
       player = @league.players.find_by(user_id: current_user.id)
       if player
-        player.update(request_state: 'requested') if player.request_status == 'removed'
+        player.update!(request_state: 'requested') if player.request_state == 'rejected'
       else
-        @league.players.create(user_id: current_user.id, request_state: request_state, access: 'player')
+        @league.players.create!(user_id: current_user.id, request_state: request_state, access: 'player')
       end
 
       redirect_to leagues_path(paramify)
@@ -98,7 +98,7 @@ class LeaguesController < ApplicationController
         player.update!(request_state: 'accepted')
       when 'remove'
         return if player.access == 'primary'
-        player.update!(request_state: 'removed')
+        player.update!(request_state: 'rejected')
       when 'bane'
         return if player.access == 'primary'
         player.update!(request_state: 'baned')
