@@ -141,9 +141,39 @@ RSpec.describe 'League admin' do
   context 'when confirmation not required' do
     let(:league) { create(:league) }
 
-    it 'can join the league'
-    it 'can not be removed from league'
-    it 'can not be baned from league'
+    it 'can join the league' do
+      logged_in_as(user) do
+        visit join_league_path(id: league.code)
+      end
+
+      player_request = Player.find_by(user_id: user.id)
+
+      expect(player_request.request_state).to eq('accepted')
+    end
+
+    it 'can not be removed from league' do
+      Player.create!(user_id: user.id, league_id: league.id, request_state: 'accepted', access: 'player')
+
+      logged_in_as(admin) do
+        visit view_league_path(league)
+
+        within '.player', text: user.name do
+          expect(page).to have_no_content('Remove')
+        end
+      end
+    end
+
+    it 'can not be baned from league' do
+      Player.create!(user_id: user.id, league_id: league.id, request_state: 'accepted', access: 'player')
+
+      logged_in_as(admin) do
+        visit view_league_path(league)
+
+        within '.player', text: user.name do
+          expect(page).to have_no_content('Bane')
+        end
+      end
+    end
   end
 
   it 'can be made admin of a league' do
@@ -160,5 +190,19 @@ RSpec.describe 'League admin' do
     player_request.reload
 
     expect(player_request.access).to eq('admin')
+  end
+
+  it 'can leave a league' do
+    Player.create!(user_id: user.id, league_id: league.id, request_state: 'accepted', access: 'player')
+
+    logged_in_as(user) do
+      visit leagues_path
+
+      within '.league', text: league.name do
+        click_on 'Leave'
+      end
+    end
+
+    expect(league.users).not_to include(user)
   end
 end
