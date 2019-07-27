@@ -28,9 +28,9 @@ RSpec.describe 'League admin' do
       expect(player_request.request_state).to eq('requested')
 
       logged_in_as(admin) do
-        visit leagues_path
+        visit view_league_path(league)
 
-        within '.leagues--requested' do
+        within '.player--requested', text: user.name do
           click_on 'Approve'
         end
       end

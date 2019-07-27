@@ -78,34 +78,38 @@ class LeaguesController < ApplicationController
     @points = Fixture.where(event: event, picks: { user: @league.users })
                 .includes(:picks)
                 .group(:user_id)
-                .order('sum(picks.score)')
+                .order(Arel.sql('sum(picks.score)'))
                 .sum('picks.score')
   end
 
   def action
     current_player = Player.find_by!(league_id: params[:id], user_id: current_user.id)
-    player = Player.find_by!(league_id: params[:id], user_id: params[:player_id])
+    player = Player.find_by!(league_id: params[:id], id: params[:player_id])
 
-    raise('Not an admin') unless current_player.access != 'player'
-
-    case params['action']
-    when 'make_admin'
-      return if player.access != 'player'
-      player.update!(access: 'admin')
-    when 'remove_admin'
-      return if player.access == 'primary'
-      player.update!(access: 'player')
-    when 'approve'
-      player.request_state == 'approved'
-    when 'remove'
-      return if player.access == 'primary'
-      player.request_state == 'removed'
-    when 'bane'
-      return if player.access == 'primary'
-      player.request_state == 'baned'
+    if %[admin primary].include?(current_player.access)
+      case params[:a]
+      when 'make_admin'
+        return if player.access != 'player'
+        player.update!(access: 'admin')
+      when 'remove_admin'
+        return if player.access == 'primary'
+        player.update!(access: 'player')
+      when 'approve'
+        player.update!(request_state: 'accepted')
+      when 'remove'
+        return if player.access == 'primary'
+        player.update!(request_state: 'removed')
+      when 'bane'
+        return if player.access == 'primary'
+        player.update!(request_state: 'baned')
+      else
+        raise "Unknown action: #{params[:action]}"
+      end
     else
-      raise "Unknown action: #{params[:action]}"
+      flash[:error] = 'You do not have permission to perform this action.'
     end
+
+    redirect_to view_league_path(params[:id])
   end
 
   private
