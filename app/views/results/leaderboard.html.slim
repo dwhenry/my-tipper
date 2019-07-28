@@ -45,14 +45,26 @@
     .col-2.h3.text-center #
     .col-4.h3 Competitor
     .col-2.h3.text-center Total
-    .col-2.h3.text-center Points
+    .col-2.h3.text-center Round Points
     .col-2.h3.text-center +/-
   - @users.each do |user|
     .row.ml-0.mr-0.py-4.match-entry.results--user class=(user == current_user ? 'bg-highlight' : 'bg-white')
-      .col-2.text-center= @points.values.index(@points[user.id]) + 1
-      .col-4= link_to user.name, results_path(paramify(user: user.id))
-      .col-2.text-center= @points[user.id]
-      .col-2.text-center= @points[user.id] - @prev_points[user.id] if @prev_points[user.id]
-      - change = @points.values.index(@points[user.id]) - (@prev_points.values.index(@prev_points[user.id]) || 0) if @prev_points[user.id]
-      .col-2.text-center.place-change
-        = (change.nil? || change == 0) ? '-' : (change.positive? ? "Down #{change}" : "Up #{change.abs}")
+      .col-md-2.text-md-center.order-md-0.d-none.d-md-inline-block
+        .d-inline-block.d-md-none #
+        .h3-until-medium.d-inline-block= @points.values.index(@points[user.id]) + 1
+      .col-10.col-md-4.order-md-1
+        .d-inline-block.d-md-none
+          | #
+          = @points.values.index(@points[user.id]) + 1
+        '
+        .d-inline-block.h3-until-medium= link_to user.name, results_path(paramify(user: user.id))
+      .col-4.col-md-2.text-md-center.order-md-2
+        .gray.d-inline-block.d-md-none Total
+        .h3-until-medium= @points[user.id]
+      .col-4.col-md-2.text-md-center.order-md-3
+        .gray.d-inline-block.d-md-none Round Points
+        .h3-until-medium= @points[user.id] - @prev_points[user.id] if @prev_points[user.id]
+      .col-4.col-md-2.text-md-center.place-change.order-md-4
+        .gray.d-inline-block.d-md-none +/-
+        - change = @points.values.index(@points[user.id]) - (@prev_points.values.index(@prev_points[user.id]) || 0) if @prev_points[user.id]
+        .h3-until-medium= (change.nil? || change == 0) ? '-' : (change.positive? ? "Down #{change}" : "Up #{change.abs}")

@@ -19,5 +19,8 @@
 }
 
 .bg-highlight {
-  background-color: $gray-300 !important;
+  background-color: $white !important;
+  border: solid 4px red;
+  border-bottom: solid 4px red !important;
+  //background-color: $gray-300 !important;
 }

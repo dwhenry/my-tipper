@@ -39,3 +39,11 @@ $body-color: #AADAE3;
     display: inline;
   }
 }
+
+.h3-until-medium {
+  font-size: $h3-font-size;
+
+  @media (min-width: 768px) {
+    font-size: $font-size-base;
+  }
+}
