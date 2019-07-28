@@ -36,13 +36,13 @@ class ResultsController < ApplicationController
     fixture_time = Fixture.where(event: event).where.not(result: nil).maximum(:at)
     @fixture = Fixture.where(event: event, at: fixture_time).first
     if @fixture
-      @users = League.find_by!(name: params[:league] || event).users.all
+      @users = League.find_by!(name: params[:league] || League::ALL_PLAYERS).users.all
 
       @points = Fixture.where(event: @fixture.event, picks: {user_id: @users.map(&:id)}).where(['fixtures.at <= ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
       @prev_points = Fixture.where(event: @fixture.event, picks: {user_id: @users.map(&:id)}).where(['fixtures.at < ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
 
       @users = @users.sort_by {|u| @points.keys.index(u.id) || 0 }
-
+      @users.unshift(current_user) if @users.index(current_user) > 5
     end
   end
 end

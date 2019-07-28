@@ -7,39 +7,52 @@
 - if @fixture.nil?
   H3 No matches have yet been played in this competition
 - else
-  table.table
-    tr
-      th Last Match
-      td
+  .row.bg-white.ml-0.mr-0.py-4
+    .col-6.col-md-2.text-right
+      .text.h4 Last Match
+    .col-6.col-md-4
+      .text
         = @fixture.home.name
         '  v
         = @fixture.away.name
-    tr
-      th Average Pick
-      td.text-center class=correct_team(@fixture, @fixture.picks.average(:pick))
+    .d-none.d-md-block.col-md-2.text-right
+      .text.h4 Average Score
+    .d-none.d-md-block.col-md-4
+      .text= @fixture.picks.average(:score).try(:round, 1)
+  .row.bg-white.ml-0.mr-0.py-4.d-md-none
+    .col-6.text-right
+      .text.h4 Average Score
+    .col-6
+      .text= @fixture.picks.average(:score).try(:round, 1)
+  .row.bg-white.ml-0.mr-0.py-4
+    .col-6.col-md-2.text-right
+      .text.h4 Average Pick
+    .col-6.col-md-4
+      .text class=correct_team(@fixture, @fixture.picks.average(:pick))
         = current_selection(@fixture, @fixture.picks.average(:pick), force: true)
-    tr
-      th Result
-      td.text-center= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
-    tr
-      th Average Score
-      td.text-center= @fixture.picks.average(:score).try(:round, 1)
+    .d-none.d-md-block.col-md-2.text-right
+      .text.h4 Result
+    .d-none.d-md-block.col-md-4
+      .text= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
+  .row.bg-white.ml-0.mr-0.py-4.d-md-none
+    .col-6.text-right
+      .text.h4 Result
+    .col-6
+      .text= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
   br
   br
-  table.table
-    tr
-      th Competitor
-      th Points
-      th Point in last round
-      th Position
-      th Position change
-    - @users.each do |user|
-      tr
-        td= link_to user.name, results_path(paramify(user: user.id))
-        td.text-center= @points[user.id]
-        td.text-center= @points[user.id] - @prev_points[user.id] if @prev_points[user.id]
-        td.text-center= @points.values.index(@points[user.id]) + 1
-        - change = @points.values.index(@points[user.id]) - (@prev_points.values.index(@prev_points[user.id]) || 0) if @prev_points[user.id]
-        td.text-center.place-change
-          span class=(change.nil? || change == 0 ? '' : (change > 0 ? 'down' : 'up'))
-            = change.abs if @prev_points[user.id]
+  .row.bg-white.ml-0.mr-0.py-4.d-none.d-md-flex
+    .col-2.h3.text-center #
+    .col-4.h3 Competitor
+    .col-2.h3.text-center Total
+    .col-2.h3.text-center Points
+    .col-2.h3.text-center +/-
+  - @users.each do |user|
+    .row.ml-0.mr-0.py-4.match-entry.results--user class=(user == current_user ? 'bg-highlight' : 'bg-white')
+      .col-2.text-center= @points.values.index(@points[user.id]) + 1
+      .col-4= link_to user.name, results_path(paramify(user: user.id))
+      .col-2.text-center= @points[user.id]
+      .col-2.text-center= @points[user.id] - @prev_points[user.id] if @prev_points[user.id]
+      - change = @points.values.index(@points[user.id]) - (@prev_points.values.index(@prev_points[user.id]) || 0) if @prev_points[user.id]
+      .col-2.text-center.place-change
+        = (change.nil? || change == 0) ? '-' : (change.positive? ? "Down #{change}" : "Up #{change.abs}")

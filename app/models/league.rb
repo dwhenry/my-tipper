@@ -12,6 +12,8 @@ class League < ApplicationRecord
   validates :requirements, absence: { if: -> { self.public }, message: 'can only be set for private leagues' }
   validates :confirmation_required, absence: { if: -> { self.requirements.blank? }, message: 'can only be set for leagues with requirements' }
 
+  scope :all_players, -> { where(event: true).first }
+
   def create(current_user)
     League.transaction do
       self.code = SecureRandom.hex

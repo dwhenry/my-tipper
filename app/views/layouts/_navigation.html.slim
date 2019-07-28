@@ -43,9 +43,9 @@ header class="site-navbar absolute transparent" role="banner"
                 li class="has-children"
                   a href="#" Current leagues
                   ul class="dropdown"
-                    li= link_to League::ALL_PLAYERS, current_path(league: nil)
+                    li= link_to League::ALL_PLAYERS, view_league_path(League.all_players)
                     - current_user.non_event_leagues.each do |league|
-                      li= link_to "#{league.name} players", current_path(league: league.name)
+                      li= link_to "#{league.name} players", view_league_path(league)
 
 
         - if current_admin
