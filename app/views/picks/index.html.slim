@@ -61,9 +61,9 @@
               .col-md-4.col-lg-4.text-center.mb-4.mb-lg-0
                 .pick data={ fixture_id: fixture.id }
                   .pick
-                    - if @pick[fixture.id].positive?
+                    - if @pick[fixture.id]&.positive?
                       = "#{fixture.away.real_name} by #{@pick[fixture.id]}"
-                    - elsif @pick[fixture.id].negative?
+                    - elsif @pick[fixture.id]&.negative?
                       = "#{fixture.home.real_name} by #{@pick[fixture.id].abs}"
                     - else
                       | You failed to pick and winner
