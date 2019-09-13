@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
+  before_action :redirect_for_staging
+
   protect_from_forgery with: :exception
 
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -8,6 +10,12 @@ class ApplicationController < ActionController::Base
   helper_method :event, :paramify, :league
 
   protected
+
+  def redirect_for_staging
+    if request.host =~ /staging/
+      redirect_to 'https://my-tipper.herokuapp.com'
+    end
+  end
 
   def paramify(vals={})
     { event: event, league: league }.merge(vals)
