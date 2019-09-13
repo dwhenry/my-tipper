@@ -18,7 +18,8 @@ class FixturesController < ApplicationController
 
   def show
     @fixture = Fixture.find(params[:id])
-    users = League.find_by!(name: params[:league] || event).users.all
+    league = League.find_by(name: params[:league]) || League.find_by(name: event)
+    users = league ? league.users.all : User.all
 
     @points = Fixture.where(event: @fixture.event, picks: {user_id: users.map(&:id)}).where(['fixtures.at <= ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
     @prev_points = Fixture.where(event: @fixture.event, picks: {user_id: users.map(&:id)}).where(['fixtures.at < ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
