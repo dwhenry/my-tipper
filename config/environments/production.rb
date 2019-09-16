@@ -80,8 +80,8 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'my-tipper.herokuapp.com', port: 80 }
 
   ActionMailer::Base.smtp_settings = {
-    :user_name => 'app41250678@heroku.com',
-    :password => 'jafb3ilj5023',
+    :user_name => 'apikey',
+    :password => ENV['SENDGRID_API_KEY'],
     :domain => 'decoybecoy.com',
     :address => 'smtp.sendgrid.net',
     :port => 587,
