@@ -81,7 +81,7 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   ActionMailer::Base.smtp_settings = {
-    :user_name => 'apikey',
+    :user_name => ENV['SENDGRID_USERNAME'],
     :password => ENV['SENDGRID_API_KEY'],
     :domain => 'decoybecoy.com',
     :address => 'smtp.sendgrid.net',
