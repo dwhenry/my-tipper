@@ -74,12 +74,18 @@ class LeaguesController < ApplicationController
 
   def view
     @league = League.includes(players: :user).find(params[:id])
-    @current_player = @league.players.where(request_state: 'accepted').find_by!(user_id: current_user.id)
-    @points = Fixture.where(event: event, picks: { user: @league.users })
-                .includes(:picks)
-                .group(:user_id)
-                .order(Arel.sql('sum(picks.score)'))
-                .sum('picks.score')
+    @current_player = @league.players.find_by(user_id: current_user.id)
+    if !@current_player
+      redirect_to leagues_path
+    elsif @current_player.request_state != 'accepted'
+      redirect_to leagues_path, flash: "Waiting for league acceptance"
+    else
+      @points = Fixture.where(event: event, picks: { user: @league.users })
+                  .includes(:picks)
+                  .group(:user_id)
+                  .order(Arel.sql('sum(picks.score)'))
+                  .sum('picks.score')
+    end
   end
 
   def action
