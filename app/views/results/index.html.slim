@@ -32,4 +32,4 @@ table.table
         td.text-center= fixture.pick(@user).score
         td.text-center= fixture.picks.in_league(league).average(:score).try(:round, 1)
         td.text-center= total_score = @rounds[fixture.id][@user.id]
-        td.text-center= @rounds[fixture.id].select { |_, s| s < total_score }.count + 1 if fixture.result
+        td.text-center= @rounds[fixture.id].select { |_, s| s < total_score }.count + 1 if fixture.result && total_score
