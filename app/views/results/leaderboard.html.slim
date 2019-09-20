@@ -55,7 +55,7 @@
       .col-10.col-md-4.order-md-1
         .d-inline-block.d-md-none
           | #
-          = @points.values.index(@points[user.id]) + 1
+          = @points[user.id] ? @points.values.index(@points[user.id]) + 1 : 'Error'
         '
         .d-inline-block.h3-until-medium= link_to user.name, results_path(paramify(user: user.id))
       .col-4.col-md-2.text-md-center.order-md-2
@@ -66,6 +66,6 @@
         .h3-until-medium= @points[user.id] - @prev_points[user.id] if @prev_points[user.id]
       .col-4.col-md-2.text-md-center.place-change.order-md-4
         .gray.d-inline-block.d-md-none +/-
-        - points = @points.values.index(@points[user.id])
+        - points = @points[user.id] ? @points.values.index(@points[user.id]) : 0
         - change = points - (@prev_points.values.index(@prev_points[user.id]) || 0) if points
         .h3-until-medium= (change.nil? || change == 0) ? '-' : (change.positive? ? "Down #{change}" : "Up #{change.abs}")
