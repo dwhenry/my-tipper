@@ -32,7 +32,8 @@
       th Total Score
       th Position
       th Position change
-    - League.find_by(name: league).users.order('users.name').each do |user|
+    - league_name = league || "All players"
+    - League.find_by(name: league_name).users.order('users.name').each do |user|
       - pick = Pick.includes(:fixture).find_by(user_id: user.id, fixture_id: @fixture.id)
       - next unless pick
       tr
