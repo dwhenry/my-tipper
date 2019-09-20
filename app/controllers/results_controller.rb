@@ -42,8 +42,15 @@ class ResultsController < ApplicationController
       @points = Fixture.where(event: @fixture.event, picks: {user_id: @users.map(&:id)}).where(['fixtures.at <= ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
       @prev_points = Fixture.where(event: @fixture.event, picks: {user_id: @users.map(&:id)}).where(['fixtures.at < ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
 
-      @users = @users.sort_by {|u| @points.keys.index(u.id) || 0 }
+      @users = @users.sort_by {|u| @points.keys.index(u.id) || build_invalid_pick(u) }
       @users.unshift(current_user) if @users.index(current_user) > 5
     end
+  end
+
+  def build_invalid_pick(u)
+    pick = @fixture.picks.create!(user_id: u, pick: 0, force_write: true)
+    pick.delete! if @fixture.picks.where(user_id: u).count > 1
+    @points = Fixture.where(event: @fixture.event, picks: {user_id: @users.map(&:id)}).where(['fixtures.at <= ?', @fixture.at]).includes(:picks).group(:user_id).order('sum(picks.score)').sum('picks.score')
+    @points.keys.index(u.id)
   end
 end
