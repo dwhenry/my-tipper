@@ -10,41 +10,38 @@
 - if @fixture.at > Time.now.utc
   h3 Unable to display match result for future dated matches
 - else
-  table.table
-    tr
-      th Average Pick
-      td.text-center class=correct_team(@fixture, @fixture.picks.average(:pick))
-        = current_selection(@fixture, @fixture.picks.average(:pick), force: true)
-    tr
-      th Result
-      td.text-center= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
-    tr
-      th Average Score
-      td.text-center= @fixture.picks.average(:score).try(:round, 1)
+  .row
+    .col-12.col-lg-4.order-lg-2
+      .row
+        .col-2.col-lg-4.bg-white.align-right.py-4.match-entry Average Pick
+        .col-4.col-lg-8= current_selection(@fixture, @fixture.picks.average(:pick), force: true)
+        .col-2.col-lg-4.bg-white.align-right.py-4.match-entry Result
+        .col-4.col-lg-8= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
+        .col-2.col-lg-4.bg-white.align-right.py-4.match-entry Average Score
+        .col-4.col-lg-8= @fixture.picks.average(:score).try(:round, 1)
 
-  br
-  br
-  table.table
-    tr
-      th Competitor
-      th Pick
-      th Round Score
-      th Total Score
-      th Position
-      th Position change
-    - league_name = league || "All players"
-    - League.find_by(name: league_name).users.order('users.name').each do |user|
-      - pick = Pick.includes(:fixture).find_by(user_id: user.id, fixture_id: @fixture.id)
-      - next unless pick
-      tr
-        td= user.name
-        /- binding.pry if user.name == 'David'
-        td class=correct_team(@fixture, pick.pick)
-          = current_selection(@fixture, pick.pick, force: @fixture.at < Time.now.utc)
-        td.text-center= pick.score
-        td.text-center= @points[pick.user_id]
-        td.text-center= @points[pick.user_id] ? @points.values.index(@points[pick.user_id]) + 1 : nil
-        - change = @points.values.index(@points[pick.user_id]) - (@prev_points.values.index(@prev_points[pick.user_id]) || 0) if @points[pick.user_id]
-        td.text-center.place-change
-          span class=(change.nil? || change == 0 ? '' : (change > 0 ? 'down' : 'up'))
-            = change.abs if change
+    .col-lg-8.order-lg-1
+      .row.bg-white.align-items-center.mr-0.py-4.match-entry
+        .col-4 Competitor
+        .col-2 Pick
+        .col-2 Round Score
+        .col-2 Total Score
+        .col-2 Position
+      - users = League.find_by(name: league)&.users || Pick.includes(:fixture, :user).where.not(pick: 0).where(fixtures: { event: event }).map(&:user).uniq
+      - users.sort_by(&:name).each do |user|
+        - pick = Pick.includes(:fixture).find_by(user_id: user.id, fixture_id: @fixture.id)
+        - next unless pick
+        .row.mr-0.py-4.match-entry
+          .col-4= user.name
+          .col-2 class=correct_team(@fixture, pick.pick)
+            = current_selection(@fixture, pick.pick, force: @fixture.at < Time.now.utc)
+          .col-2.text-center= pick.score
+          .col-2.text-center= @points[pick.user_id]
+          .col-2.text-center
+            = @points[pick.user_id] ? @points.values.index(@points[pick.user_id]) + 1 : nil
+            '
+            - change = @points.values.index(@points[pick.user_id]) - (@prev_points.values.index(@prev_points[pick.user_id]) || 0) if @points[pick.user_id]
+            span class=(change.nil? || change == 0 ? '' : (change > 0 ? 'down' : 'up'))
+              |  (
+              = change.abs if change
+              ' )
