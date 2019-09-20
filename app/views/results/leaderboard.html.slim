@@ -51,7 +51,7 @@
     .row.ml-0.mr-0.py-4.match-entry.results--user class=(user == current_user ? 'bg-highlight' : 'bg-white')
       .col-md-2.text-md-center.order-md-0.d-none.d-md-inline-block
         .d-inline-block.d-md-none #
-        .h3-until-medium.d-inline-block= @points.values.index(@points[user.id]) + 1
+        .h3-until-medium.d-inline-block= @points[user.id] ? (@points.values.index(@points[user.id]) || 0) + 1 : 'unknown user'
       .col-10.col-md-4.order-md-1
         .d-inline-block.d-md-none
           | #
