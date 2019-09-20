@@ -18,18 +18,18 @@
     .d-none.d-md-block.col-md-2.text-right
       .text.h4 Average Score
     .d-none.d-md-block.col-md-4
-      .text= @fixture.picks.average(:score).try(:round, 1)
+      .text= @fixture.picks.where(user: @users).average(:score).try(:round, 1)
   .row.bg-white.ml-0.mr-0.py-4.d-md-none
     .col-6.text-right
       .text.h4 Average Score
     .col-6
-      .text= @fixture.picks.average(:score).try(:round, 1)
+      .text= @fixture.picks.where(user: @users).average(:score).try(:round, 1)
   .row.bg-white.ml-0.mr-0.py-4
     .col-6.col-md-2.text-right
       .text.h4 Average Pick
     .col-6.col-md-4
-      .text class=correct_team(@fixture, @fixture.picks.average(:pick))
-        = current_selection(@fixture, @fixture.picks.average(:pick), force: true)
+      .text class=correct_team(@fixture, @fixture.picks.where(user: @users).average(:pick))
+        = current_selection(@fixture, @fixture.picks.where(user: @users).average(:pick), force: true)
     .d-none.d-md-block.col-md-2.text-right
       .text.h4 Result
     .d-none.d-md-block.col-md-4

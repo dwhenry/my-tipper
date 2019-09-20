@@ -14,11 +14,11 @@
     .col-12.col-lg-4.order-lg-2
       .row
         .col-2.col-lg-4.bg-white.align-right.py-4.match-entry Average Pick
-        .col-4.col-lg-8= current_selection(@fixture, @fixture.picks.average(:pick), force: true)
+        .col-4.col-lg-8= current_selection(@fixture, @fixture.picks.where(user: @users).average(:pick), force: true)
         .col-2.col-lg-4.bg-white.align-right.py-4.match-entry Result
         .col-4.col-lg-8= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
         .col-2.col-lg-4.bg-white.align-right.py-4.match-entry Average Score
-        .col-4.col-lg-8= @fixture.picks.average(:score).try(:round, 1)
+        .col-4.col-lg-8= @fixture.picks.where(user: @users).average(:score).try(:round, 1)
 
     .col-lg-8.order-lg-1
       .row.bg-white.align-items-center.mr-0.py-4.match-entry
@@ -27,8 +27,7 @@
         .col-2 Round Score
         .col-2 Total Score
         .col-2 Position
-      - users = League.find_by(name: league)&.users || Pick.includes(:fixture, :user).where.not(pick: 0).where(fixtures: { event: event }).map(&:user).uniq
-      - users.sort_by(&:name).each do |user|
+      - @users.sort_by(&:name).each do |user|
         - pick = Pick.includes(:fixture).find_by(user_id: user.id, fixture_id: @fixture.id)
         - next unless pick
         .row.mr-0.py-4.match-entry
@@ -40,8 +39,9 @@
           .col-2.text-center
             = @points[pick.user_id] ? @points.values.index(@points[pick.user_id]) + 1 : nil
             '
-            - change = @points.values.index(@points[pick.user_id]) - (@prev_points.values.index(@prev_points[pick.user_id]) || 0) if @points[pick.user_id]
-            span class=(change.nil? || change == 0 ? '' : (change > 0 ? 'down' : 'up'))
-              |  (
-              = change.abs if change
-              ' )
+            - change = @points.values.index(@points[pick.user_id]) - (@prev_points.values.index(@prev_points[pick.user_id]) || 0) if @points[pick.user_id] && @prev_points[pick.user_id]
+            - if change && change != 0
+              span class=(change > 0 ? 'down' : 'up')
+                |  (
+                = change.abs
+                ' )

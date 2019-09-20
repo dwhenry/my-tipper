@@ -1,35 +1,35 @@
 - content_for :header do
   | Results
 
-table.table
-  - @fixtures_by_round.each do |round, fixtures|
-    tr
-      th
-        - if round =~ /^\d+$/
-          ' Round
-        = round
-      th Your Pick
-      th Avg Pick
-      th Result
-      th Your Score
-      th Avg Score
-      th Total Score
-      th Position
-    - fixtures.each do |fixture|
-      tr
-        td
-          = link_to fixture_path(fixture, paramify) do
-            = fixture.home.name
-            '  v
-            = fixture.away.name
-        td class=correct_team(fixture, fixture.pick(@user).try(:pick))
-          - if fixture.at < Time.now.utc || @user == @user
-            = current_selection(fixture, fixture.pick(@user).try(:pick), force: fixture.at < Time.now.utc)
-        td.text-center class=correct_team(fixture, fixture.picks.in_league(league).average(:pick))
-          - if fixture.at < Time.now.utc
-            = current_selection(fixture, fixture.picks.in_league(league).average(:pick), force: true)
-        td.text-center= current_selection(fixture, fixture.result, force: true) if fixture.result
-        td.text-center= fixture.pick(@user).score
-        td.text-center= fixture.picks.in_league(league).average(:score).try(:round, 1)
-        td.text-center= total_score = @rounds[fixture.id][@user.id]
-        td.text-center= @rounds[fixture.id].select { |_, s| s < total_score }.count + 1 if fixture.result && total_score
+- @fixtures_by_round.each do |round, fixtures|
+  .row.bg-white.py-4.text-center
+
+    .col-2
+      - if round =~ /^\d+$/
+        ' Round
+      = round
+    .col-2 Your Pick
+    .col-2 Avg Pick
+    .col-2 Result
+    .col-1 Your Score
+    .col-1 Avg Score
+    .col-1 Total Score
+    .col-1 Position
+  - fixtures.each do |fixture|
+    .row
+      .col-2
+        = link_to fixture_path(fixture, paramify) do
+          = fixture.home.name
+          '  v
+          = fixture.away.name
+      .col-2.text-center class=correct_team(fixture, fixture.pick(@user).try(:pick))
+        - if fixture.at < Time.now.utc || @user == @user
+          = current_selection(fixture, fixture.pick(@user).try(:pick), force: fixture.at < Time.now.utc)
+      .col-2.text-center class=correct_team(fixture, fixture.picks.in_league(league).average(:pick))
+        - if fixture.at < Time.now.utc
+          = current_selection(fixture, fixture.picks.in_league(league).average(:pick), force: true)
+      .col-2.text-center= current_selection(fixture, fixture.result, force: true) if fixture.result
+      .col-1.text-center= fixture.pick(@user).score
+      .col-1.text-center= fixture.picks.in_league(league).average(:score).try(:round, 1)
+      .col-1.text-center= total_score = @rounds[fixture.id][@user.id]
+      .col-1.text-center= @rounds[fixture.id].select { |_, s| s < total_score }.count + 1 if fixture.result && total_score
