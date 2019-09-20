@@ -38,6 +38,7 @@ class ApplicationController < ActionController::Base
   def event
     # this should not really be hard coded.. but makes it a little easier during the initial implementation
     params[:event].presence || '2019'
+    '2019' # force the 2019 event to solve cookie issue for dad...
   end
 
   def league
