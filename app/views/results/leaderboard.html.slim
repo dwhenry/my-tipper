@@ -66,5 +66,6 @@
         .h3-until-medium= @points[user.id] - @prev_points[user.id] if @prev_points[user.id]
       .col-4.col-md-2.text-md-center.place-change.order-md-4
         .gray.d-inline-block.d-md-none +/-
-        - change = @points.values.index(@points[user.id]) - (@prev_points.values.index(@prev_points[user.id]) || 0) if @prev_points[user.id]
+        - points = @points.values.index(@points[user.id])
+        - change = points - (@prev_points.values.index(@prev_points[user.id]) || 0) if points
         .h3-until-medium= (change.nil? || change == 0) ? '-' : (change.positive? ? "Down #{change}" : "Up #{change.abs}")
