@@ -36,7 +36,7 @@
             = current_selection(@fixture, pick.pick, force: @fixture.at < Time.now.utc)
           .col-2.text-center= pick.score
           .col-2.text-center= @points[pick.user_id]
-          .col-2.text-center
+          .col-2.text-center.place-change
             = @points[pick.user_id] ? @points.values.index(@points[pick.user_id]) + 1 : nil
             '
             - change = @points.values.index(@points[pick.user_id]) - @prev_points.values.index(@prev_points[pick.user_id]) if @points[pick.user_id] && @prev_points[pick.user_id]
