@@ -39,7 +39,7 @@
           .col-2.text-center
             = @points[pick.user_id] ? @points.values.index(@points[pick.user_id]) + 1 : nil
             '
-            - change = @points.values.index(@points[pick.user_id]) - (@prev_points.values.index(@prev_points[pick.user_id]) || 0) if @points[pick.user_id] && @prev_points[pick.user_id]
+            - change = @points.values.index(@points[pick.user_id]) - @prev_points.values.index(@prev_points[pick.user_id]) if @points[pick.user_id] && @prev_points[pick.user_id]
             - if change && change != 0
               span class=(change > 0 ? 'down' : 'up')
                 |  (

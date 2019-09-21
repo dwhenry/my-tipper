@@ -23,6 +23,6 @@ class FixturesController < ApplicationController
 
     scope = Fixture.where(event: @fixture.event, picks: {user_id: @users.map(&:id)}).includes(:picks).group(:user_id)
     @points = scope.where(['fixtures.at <= ?', @fixture.at]).order('sum(picks.score)').sum('picks.score')
-    @prev_points = scope.where(['fixtures.at < ?', @fixture.at]).sum('picks.score')
+    @prev_points = scope.where(['fixtures.at < ?', @fixture.at]).order('sum(picks.score)').sum('picks.score')
   end
 end
