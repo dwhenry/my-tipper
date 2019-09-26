@@ -1,4 +1,5 @@
 class TeamWrappersController < ApplicationController
+  before_action :allow_setting
 
   def index
     wrappers = TeamWrapper.where.not(name: nil)
@@ -15,5 +16,12 @@ class TeamWrappersController < ApplicationController
       tw.update_attribute(:team_id, value.to_i)
     end
     redirect_to team_wrappers_path(paramify)
+  end
+
+  private
+
+
+  def allow_setting
+    current_user.result_setter?
   end
 end

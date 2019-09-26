@@ -34,6 +34,7 @@ header class="site-navbar absolute transparent" role="banner"
               li= link_to 'Leader board', leaderboard_results_path(paramify)
               li= link_to 'Points breakdown', results_path(paramify)
               li= link_to 'Match breakdown', fixture_path(Fixture.last_fixture(event), paramify) if Fixture.last_fixture(event)
+              li= link_to 'Set result', new_result_path if current_user.result_setter
           li class="has-children"
             a href="#" Leagues
             ul class="dropdown arrow-top"

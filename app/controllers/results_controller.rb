@@ -1,6 +1,7 @@
 class ResultsController < ApplicationController
   before_action :authenticate_user!
   # skip_before_action :authenticate_user!, if: :current_admin
+  before_action :allow_setting, only: [:new, :update]
 
   def index
     fixtures = Fixture.includes({home: :team}, {away: :team}, :picks).order(:at)
@@ -45,5 +46,31 @@ class ResultsController < ApplicationController
       @users = @users.sort_by {|u| @points.keys.index(u.id) || 10000 }
       @users.unshift(current_user) if @users.index(current_user) > 5
     end
+  end
+
+  def new
+    @fixture = next_fixture_to_update.first
+  end
+
+  def update
+    @fixture = next_fixture_to_update.first
+    if params[:id].to_i != @fixture.id
+      flash[:notice] = 'Result of that fixture can not be set at this time'
+      render :new
+    else
+      @fixture.update_result(params[:result].to_i)
+      redirect_to new_result_path
+    end
+  end
+
+  private
+
+  def next_fixture_to_update
+    # TODO: avoid hardcoding the event...
+    Fixture.where('at < ?', Time.now).where(result: nil, event: '2019').order(:at)
+  end
+
+  def allow_setting
+    redirect_to root_path unless current_user.result_setter?
   end
 end
