@@ -39,7 +39,7 @@
 
             .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
               .col-12
-                = submit_tag "Set result", class: "btn btn-primary btn-lg btn-block"
+                = submit_tag "Set result", class: "btn btn-primary btn-lg btn-block", data: { confirm: "Please check as you will be unable to change this once set?" }
 
 - else
   .row
