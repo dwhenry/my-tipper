@@ -13,7 +13,7 @@ html lang="en"
     meta property="og:image" content=asset_url('mde')
     meta property="og:title"  content="My Tipper - World Cup Rugby"
 
-  body class="#{"admin" if current_admin} #{"user" if current_user}"
+  body class="#{"user" if current_user}"
     .site-wrap
       = render 'layouts/navigation'
 
@@ -34,7 +34,7 @@ html lang="en"
                     br
                     | Score Tipper
 
-                - if current_admin.nil? && current_user.nil?
+                - if current_user.nil?
                   p= link_to 'Join here', new_user_registration_path(paramify), class: "btn btn-primary btn-sm rounded-0 py-3 px-5"
 
       .site-blocks-vs.site-section.bg-light

@@ -1,5 +1,4 @@
 class TeamWrappersController < ApplicationController
-  before_action :authenticate_admin!
 
   def index
     wrappers = TeamWrapper.where.not(name: nil)

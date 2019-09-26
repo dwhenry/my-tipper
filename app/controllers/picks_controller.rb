@@ -1,6 +1,6 @@
 class PicksController < ApplicationController
-  before_action :authenticate_user!, except: :current_admin
-  skip_before_action :authenticate_user!, if: :current_admin
+  before_action :authenticate_user! #, except: :current_admin
+  # skip_before_action :authenticate_user!, if: :current_admin
 
   def index
     fixtures = Fixture.includes({home: :team}, {away: :team}).order(:at)

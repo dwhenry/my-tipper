@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :only_one_login
   helper_method :event, :paramify, :league
 
   protected
@@ -22,17 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user(over_ride: true)
-    super() || (over_ride && over_ride_user)
-  end
-
-  def over_ride_user
-    if current_admin
-      session[:email] = nil if params[:clear_e]
-
-      email = params[:e] || session[:email]
-      session[:email] = email
-      User.find_by(email: email)
-    end
+    super() #|| (over_ride && over_ride_user)
   end
 
   def event
@@ -47,13 +36,6 @@ class ApplicationController < ActionController::Base
     params[:league]
   end
 
-  def only_one_login
-    if current_user(over_ride: false) && current_admin
-      sign_out_all_scopes
-      flash[:alert] = "You can only be logged in as a sign user type are any one time"
-      redirect_to root_path(paramify)
-    end
-  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name])

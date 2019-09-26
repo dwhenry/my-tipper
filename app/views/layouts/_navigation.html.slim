@@ -47,9 +47,6 @@ header class="site-navbar absolute transparent" role="banner"
                     - current_user.non_event_leagues.each do |league|
                       li= link_to "#{league.name} players", view_league_path(league)
 
-
-        - if current_admin
-          li= link_to 'Team wrappers', team_wrappers_path(paramify)
         li class="has-children"
           a href="#"= "RWC #{event}"
           ul class="dropdown arrow-top"
@@ -57,31 +54,14 @@ header class="site-navbar absolute transparent" role="banner"
             li= link_to "RWC 2015", current_path(event: '2015')
             li= link_to "RWC 2011", current_path(event: '2011')
 
-        - if current_admin
-          - if current_user
-            li class="has-children"
-              a href="#"= current_user.email
-              ul class="dropdown arrow-top"
-                li= link_to 'Clear user', root_path(paramify(clear_e: true))
-                li
-                  a href="#" Menu Two
-                li
-                  a href="#" Menu Three
-                li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
-          - else
-            li class="has-children"
-              = link_to 'Admin'
-              ul class="dropdown arrow-top"
-                li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
-        - elsif current_user
+        - if current_user
           li class="has-children"
             a href="#"= current_user.name
             ul class="dropdown arrow-top"
-              li= link_to 'Logout', destroy_admin_session_path(paramify), method: 'delete'
+              li= link_to 'Logout', destroy_user_session_path(paramify), method: 'delete'
               li= link_to 'Config', edit_user_registration_path(paramify)
         - else
           li class="has-children"
             = link_to 'Sign in', new_user_session_path(paramify)
             ul class="dropdown arrow-top"
               li= link_to 'Sign up', new_user_registration_path(paramify)
-              li= link_to 'Admin', new_admin_session_path(paramify)
