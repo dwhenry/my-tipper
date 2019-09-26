@@ -23,7 +23,7 @@
           '  v
           = fixture.away.name
       .col-2.text-center class=correct_team(fixture, fixture.pick(@user).try(:pick))
-        - if fixture.at < Time.now.utc || @user == @user
+        - if fixture.at < Time.now.utc || @user == current_user
           = current_selection(fixture, fixture.pick(@user).try(:pick), force: fixture.at < Time.now.utc)
       .col-2.text-center class=correct_team(fixture, fixture.picks.in_league(league).average(:pick))
         - if fixture.at < Time.now.utc
