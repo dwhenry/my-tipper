@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :picks
   resources :results do
     collection { get :leaderboard }
+    member { post :cancel }
   end
   resources :team_wrappers
   resources :leagues do

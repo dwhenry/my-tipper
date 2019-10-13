@@ -1,7 +1,7 @@
 class ResultsController < ApplicationController
   before_action :authenticate_user!
   # skip_before_action :authenticate_user!, if: :current_admin
-  before_action :allow_setting, only: [:new, :update]
+  before_action :allow_setting, except: [:index, :leaderboard]
 
   def index
     fixtures = Fixture.includes({home: :team}, {away: :team}, :picks).order(:at)
@@ -59,6 +59,17 @@ class ResultsController < ApplicationController
       render :new
     else
       @fixture.update_result(params[:result].to_i)
+      redirect_to new_result_path
+    end
+  end
+
+  def cancel
+    @fixture = next_fixture_to_update.first
+    if params[:id].to_i != @fixture.id
+      flash[:notice] = 'Result of that fixture can not be set at this time'
+      render :new
+    else
+      @fixture.cancel!
       redirect_to new_result_path
     end
   end

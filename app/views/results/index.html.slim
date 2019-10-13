@@ -28,7 +28,11 @@
       .col-2.text-center class=correct_team(fixture, fixture.picks.in_league(league).average(:pick))
         - if fixture.at < Time.now.utc
           = current_selection(fixture, fixture.picks.in_league(league).average(:pick), force: true)
-      .col-2.text-center= current_selection(fixture, fixture.result, force: true) if fixture.result
+      .col-2.text-center
+        - if fixture.cancelled?
+          | Game cancelled
+        - elsif fixture.result
+          = current_selection(fixture, fixture.result, force: true)
       .col-1.text-center= fixture.pick(@user).score
       .col-1.text-center= fixture.picks.in_league(league).average(:score).try(:round, 1)
       .col-1.text-center= total_score = @rounds[fixture.id][@user.id]

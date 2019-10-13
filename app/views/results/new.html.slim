@@ -38,8 +38,19 @@
                       span class="text-uppercase small country"= @fixture.home.wrapper_name
 
             .row.bg-white.align-items-center.ml-0.mr-0.py-4.match-entry
-              .col-12
-                = submit_tag "Set result", class: "btn btn-primary btn-lg btn-block", data: { confirm: "Please check as you will be unable to change this once set?" }
+              .col-md-6
+                = submit_tag "Set result", class: "btn btn-primary btn-lg btn-block", data: { confirm: "Please check as you will be unable to chan§ge this once set?" }
+              .col-md-6
+                = link_to "Mark as Cancelled", cancel_result_path(@fixture), method: 'POST', data: { confirm: "Please check as you will be unable to chan§ge this once set?" }, class: "btn btn-secondary btn-lg btn-block"
+
+                /#   <%= button_to('Destroy', 'http://www.example.com',
+                /#             method: "delete", remote: true, data: { confirm: 'Are you sure?', disable_with: 'loading...' }) %>
+                /#   # => "<form class='button_to' method='post' action='http://www.example.com' data-remote='true'>
+                /#   #       <input name='_method' value='delete' type='hidden' />
+                /#   #       <input value='Destroy' type='submit' data-disable-with='loading...' data-confirm='Are you sure?' />
+                /#   #       <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"/>
+                /#   #     </form>"
+                /#   #
 
 - else
   .row

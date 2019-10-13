@@ -39,6 +39,17 @@ class Fixture < ApplicationRecord
     end
   end
 
+  def cancel!
+    self.cancelled = true
+    self.result = 0
+    self.save!
+
+    users_without_picks = User.pluck(:id) - User.joins(picks: :fixture).where(fixtures: {id: id}).pluck(:id)
+    users_without_picks.each {|u| picks.create!(user_id: u, pick: 0, force_write: true)}
+
+    picks.reload.update_all(score: 0)
+  end
+
   private
 
   def allowed_to_edit_result_value?

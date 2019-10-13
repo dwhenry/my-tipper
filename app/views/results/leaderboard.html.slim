@@ -33,12 +33,21 @@
     .d-none.d-md-block.col-md-2.text-right
       .text.h4 Result
     .d-none.d-md-block.col-md-4
-      .text= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
+      .text
+        - if @fixture.cancelled?
+          | Game cancelled
+        - elsif @fixture.result
+          = current_selection(@fixture, @fixture.result, force: true)
   .row.bg-white.ml-0.mr-0.py-4.d-md-none
     .col-6.text-right
       .text.h4 Result
     .col-6
-      .text= current_selection(@fixture, @fixture.result, force: true) if @fixture.result
+      .text
+        - if @fixture.cancelled?
+          | Game cancelled
+        - elsif @fixture.result
+          = current_selection(@fixture, @fixture.result, force: true)
+
   br
   br
   .row.bg-white.ml-0.mr-0.py-4.d-none.d-md-flex

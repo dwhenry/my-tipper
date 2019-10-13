@@ -23,7 +23,9 @@
               .d-inline-block
                 .bg-black.py-2.px-4.mb-2.text-white.d-inline-block.rounded
                   span class="h5"
-                    - if fixture.result.present?
+                    - if fixture.cancelled?
+                      | Game Cancelled
+                    - elsif fixture.result.present?
                       = "#{(fixture.result.positive? ? fixture.away : fixture.home).real_name} by #{fixture.result.abs}"
                     - else
                       = fixture.at.strftime('%d %b %y, %l:%M%P')
